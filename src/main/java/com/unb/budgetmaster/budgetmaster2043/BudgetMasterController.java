@@ -3,7 +3,7 @@ package com.unb.budgetmaster.budgetmaster2043;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 
-public class HelloController {
+public class BudgetMasterController {
     @FXML
     private Label welcomeText;
 
