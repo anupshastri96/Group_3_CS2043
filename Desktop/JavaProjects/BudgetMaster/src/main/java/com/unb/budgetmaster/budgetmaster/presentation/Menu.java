@@ -44,12 +44,12 @@ public class Menu extends Application {
         historyScene = createHistoryScene(stage, screenSize);
 
         //Sets the scene and displays it
-        stage.setMaximized(true);
+        //stage.setMaximized(true);
         switchScenes(historyScene, "History");
         stage.show();
     }
 
-    public Scene createMenuScene(Stage stage, Rectangle2D screensize, String sceneName) {
+    /*public Scene createMenuScene(Stage stage, Rectangle2D screensize, String sceneName) {
         Label displayedAmount;
         Label contentTitle;
         //Content Column Titles
@@ -62,10 +62,10 @@ public class Menu extends Application {
         Scene scene;
 
         return scene;
-    }
+    }*/
 
     public Scene createSpendingScene(Stage stage, Rectangle2D screensize) {
-        Label monthlySpendingText;
+        Label displayedAmount;
         Label contentTitle;
         Label categoryTitle;
         Label percentSpendTitle;
@@ -74,7 +74,7 @@ public class Menu extends Application {
         Button newCategory;
 
         BorderPane borderPane = new BorderPane();
-        BorderPane topBar = new BorderPane();
+        BorderPane contentPane = new BorderPane();
         BorderPane contentTop = new BorderPane();
         VBox contentBox = new VBox();
         HBox contentColumns = new HBox();
@@ -100,8 +100,9 @@ public class Menu extends Application {
 
         //Navigation Pane
         VBox navigation = new VBox();
-        navigation.setAlignment(Pos.CENTER);
-        navigation.setSpacing(5);
+        navigation.setAlignment(Pos.TOP_CENTER);
+        navigation.setPrefWidth(300);
+        navigation.setSpacing(20);
         navigation.setPadding(new Insets(5, 5, 5, 5));
         navigation.setStyle("-fx-border-color: black");
         navigation.setStyle("-fx-border-style: hidden solid hidden hidden");
@@ -112,11 +113,8 @@ public class Menu extends Application {
         navigation.getChildren().addAll(menuLabel, spendingButton, savingButton, analysisButton, historyButton);
 
         //Top Bar
-        monthlySpendingText = addLabel("Your Monthly Spending: $0.00", "Arial", 24);
-
-        topBar.setLeft(navigation);
-        topBar.setCenter(monthlySpendingText);
-        topBar.setStyle("-fx-border-color: black");
+        displayedAmount = addLabel("Your Monthly Spending: $0.00", "Arial", 24);
+        displayedAmount.setPadding(new Insets(10, 0, 0, 0));
 
         //ContentBox
         contentTitle = addLabel("Categories of Spending", "Arial", 20);
@@ -147,17 +145,23 @@ public class Menu extends Application {
         contentBox.getChildren().addAll(contentTop, contentColumns, category1, category2, category3, category4);
         contentBox.setPadding(new Insets(15, 15, 15, 15));
 
+        //Content Pane
+        contentPane.setTop(displayedAmount);
+        contentPane.setAlignment(displayedAmount, Pos.CENTER);
+        contentPane.setCenter(contentBox);
+        contentPane.setBottom(newCategory);
+
         //Border Pane
-        borderPane.setTop(topBar);
-        borderPane.setBottom(newCategory);
-        borderPane.setCenter(contentBox);
+        borderPane.setLeft(navigation);
+        borderPane.setCenter(contentPane);
+        borderPane.setAlignment(contentBox, Pos.CENTER_LEFT);
         borderPane.setPadding(new Insets(0, 0, 5, 0));
 
         return scene;
     }
 
     public Scene createSavingScene(Stage stage, Rectangle2D screensize) {
-        Label monthlySavingsText;
+        Label displayedAmount;
         Label contentTitle;
         Label goalTitle;
         Label percentGoalTitle;
@@ -166,7 +170,7 @@ public class Menu extends Application {
         Button newGoal;
 
         BorderPane borderPane = new BorderPane();
-        BorderPane topBar = new BorderPane();
+        BorderPane contentPane = new BorderPane();
         BorderPane contentTop = new BorderPane();
         VBox contentBox = new VBox();
         HBox contentColumns = new HBox();
@@ -192,8 +196,9 @@ public class Menu extends Application {
 
         //Navigation Pane
         VBox navigation = new VBox();
-        navigation.setAlignment(Pos.CENTER);
-        navigation.setSpacing(5);
+        navigation.setAlignment(Pos.TOP_CENTER);
+        navigation.setPrefWidth(300);
+        navigation.setSpacing(20);
         navigation.setPadding(new Insets(5, 5, 5, 5));
         navigation.setStyle("-fx-border-color: black");
         navigation.setStyle("-fx-border-style: hidden solid hidden hidden");
@@ -204,11 +209,8 @@ public class Menu extends Application {
         navigation.getChildren().addAll(menuLabel, spendingButton, savingButton, analysisButton, historyButton);
 
         //Top Bar
-        monthlySavingsText = addLabel("Your Monthly Savings: $0.00", "Arial", 24);
-
-        topBar.setLeft(navigation);
-        topBar.setCenter(monthlySavingsText);
-        topBar.setStyle("-fx-border-color: black");
+        displayedAmount = addLabel("Your Monthly Savings: $0.00", "Arial", 24);
+        displayedAmount.setPadding(new Insets(10, 0, 0, 0));
 
         //ContentBox
         contentTitle = addLabel("Saving Goals", "Arial", 20);
@@ -237,20 +239,26 @@ public class Menu extends Application {
         contentBox.getChildren().addAll(contentTop, contentColumns, category1, category2, category3);
         contentBox.setPadding(new Insets(15, 15, 15, 15));
 
+        //Content Pane
+        contentPane.setTop(displayedAmount);
+        contentPane.setAlignment(displayedAmount, Pos.CENTER);
+        contentPane.setCenter(contentBox);
+        contentPane.setBottom(newGoal);
+
         //Border Pane
-        borderPane.setTop(topBar);
-        borderPane.setBottom(newGoal);
-        borderPane.setCenter(contentBox);
+        borderPane.setLeft(navigation);
+        borderPane.setCenter(contentPane);
+        borderPane.setAlignment(contentBox, Pos.CENTER_LEFT);
         borderPane.setPadding(new Insets(0, 0, 5, 0));
 
         return scene;
     }
 
     public Scene createAnalysisScene(Stage stage, Rectangle2D screensize) {
-        Label analysisLabelText;
+        Label displayedAmount;
 
         BorderPane borderPane = new BorderPane();
-        BorderPane topBar = new BorderPane();
+        BorderPane contentPane = new BorderPane();
         Scene scene = new Scene(borderPane, screensize.getWidth(), screensize.getHeight());
 
         //Navigation Buttons
@@ -273,8 +281,9 @@ public class Menu extends Application {
 
         //Navigation Pane
         VBox navigation = new VBox();
-        navigation.setAlignment(Pos.CENTER);
-        navigation.setSpacing(5);
+        navigation.setAlignment(Pos.TOP_CENTER);
+        navigation.setPrefWidth(300);
+        navigation.setSpacing(20);
         navigation.setPadding(new Insets(5, 5, 5, 5));
         navigation.setStyle("-fx-border-color: black");
         navigation.setStyle("-fx-border-style: hidden solid hidden hidden");
@@ -285,26 +294,31 @@ public class Menu extends Application {
         navigation.getChildren().addAll(menuLabel, spendingButton, savingButton, analysisButton, historyButton);
 
         //Top Bar
-        analysisLabelText = addLabel("Analysis Page", "Arial", 24);
+        displayedAmount = addLabel("Analysis Page", "Arial", 24);
+        displayedAmount.setPadding(new Insets(10, 0, 0, 0));
 
-        topBar.setLeft(navigation);
-        topBar.setCenter(analysisLabelText);
-        topBar.setStyle("-fx-border-color: black");
 
-        borderPane.setTop(topBar);
+        //Content Pane
+        contentPane.setTop(displayedAmount);
+        contentPane.setAlignment(displayedAmount, Pos.CENTER);
+
+        //Border Pane
+        borderPane.setLeft(navigation);
+        borderPane.setCenter(contentPane);
+        borderPane.setPadding(new Insets(0, 0, 5, 0));
 
         return scene;
     }
 
     public Scene createHistoryScene(Stage stage, Rectangle2D screensize) {
-        Label remainingBalanceText;
+        Label displayedAmount;
         Label contentTitle;
         Label historyTitle;
         Button editHistory;
         Button loadMoreButton;
 
         BorderPane borderPane = new BorderPane();
-        BorderPane topBar = new BorderPane();
+        BorderPane contentPane = new BorderPane();
         BorderPane contentTop = new BorderPane();
         VBox contentBox = new VBox();
         HBox contentColumns = new HBox();
@@ -330,8 +344,9 @@ public class Menu extends Application {
 
         //Navigation Pane
         VBox navigation = new VBox();
-        navigation.setAlignment(Pos.CENTER);
-        navigation.setSpacing(5);
+        navigation.setAlignment(Pos.TOP_CENTER);
+        navigation.setPrefWidth(300);
+        navigation.setSpacing(20);
         navigation.setPadding(new Insets(5, 5, 5, 5));
         navigation.setStyle("-fx-border-color: black");
         navigation.setStyle("-fx-border-style: hidden solid hidden hidden");
@@ -342,16 +357,14 @@ public class Menu extends Application {
         navigation.getChildren().addAll(menuLabel, spendingButton, savingButton, analysisButton, historyButton);
 
         //Top Bar
-        remainingBalanceText = addLabel("Remaining Balance:\n$0.00", "Arial", 24);
-
-        topBar.setLeft(navigation);
-        topBar.setCenter(remainingBalanceText);
-        topBar.setStyle("-fx-border-color: black");
+        displayedAmount = addLabel("Remaining Balance:\n$0.00", "Arial", 24);
+        displayedAmount.setPadding(new Insets(10, 0, 0, 0));
 
         //ContentBox
         contentTitle = addLabel("History", "Arial", 20);
         editHistory = addButton("Edit", 60, 10);
         loadMoreButton = addButton("Load More", 100, 10);
+        loadMoreButton.setAlignment(Pos.CENTER);
 
         //Content Top
         contentTop.setLeft(contentTitle);
@@ -375,11 +388,15 @@ public class Menu extends Application {
         contentBox.getChildren().addAll(contentTop, contentColumns, transaction1, transaction2, transaction3, transaction4);
         contentBox.setPadding(new Insets(15, 15, 15, 15));
 
+        //Content Pane
+        contentPane.setTop(displayedAmount);
+        contentPane.setAlignment(displayedAmount, Pos.CENTER);
+        contentPane.setCenter(contentBox);
+        contentPane.setBottom(loadMoreButton);
+
         //Border Pane
-        borderPane.setTop(topBar);
-        borderPane.setBottom(loadMoreButton);
-        borderPane.setAlignment(loadMoreButton, Pos.CENTER);
-        borderPane.setCenter(contentBox);
+        borderPane.setLeft(navigation);
+        borderPane.setCenter(contentPane);
         borderPane.setAlignment(contentBox, Pos.CENTER_LEFT);
         borderPane.setPadding(new Insets(0, 0, 5, 0));
 
