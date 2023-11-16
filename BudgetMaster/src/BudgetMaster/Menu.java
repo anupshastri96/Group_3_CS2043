@@ -8,6 +8,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.stage.Screen;
@@ -48,10 +49,18 @@ public class Menu extends Application {
 
     public Scene createSpendingScene(Stage stage, Rectangle2D screensize) {
         Label monthlySpendingText;
+        Label contentTitle;
+        Label categoryTitle;
+        Label percentSpendTitle;
+        Label amountPaidTitle;
+        Button editSpendings;
+        Button newCategory;
 
         BorderPane borderPane = new BorderPane();
         BorderPane topBar = new BorderPane();
-        BorderPane content = new BorderPane();
+        BorderPane contentTop = new BorderPane();
+        VBox contentBox = new VBox();
+        HBox contentColumns = new HBox();
         Scene scene = new Scene(borderPane, screensize.getWidth(), screensize.getHeight());
 
         //Navigation Buttons
@@ -92,19 +101,58 @@ public class Menu extends Application {
         topBar.setCenter(monthlySpendingText);
         topBar.setStyle("-fx-border-color: black");
 
-        borderPane.setTop(topBar);
+        //ContentBox
+        contentTitle = addLabel("Categories of Spending", "Arial", 20);
+        editSpendings = addButton("Edit", 60, 10);
+        newCategory = addButton("Create new Category of Spending", 500, 10);
 
-        //Content
-        
+        //Content Top
+        contentTop.setLeft(contentTitle);
+        contentTop.setRight(editSpendings);
+
+        //Content Columns
+        categoryTitle = addCategoryColumn("Categories");
+        percentSpendTitle = addCategoryColumn("% of Spendings");
+        amountPaidTitle = addCategoryColumn("Amount Paid This Month");
+
+        contentColumns.getChildren().addAll(categoryTitle, percentSpendTitle, amountPaidTitle);
+        contentColumns.setAlignment(Pos.CENTER);
+
+        HBox category1 = addSpending("Grocery\t\t\t\t\t0%\t\t\t\t\t$0.00");
+        category1.setAlignment(Pos.CENTER);
+        HBox category2 = addSpending("Rent\t\t\t\t\t\t0%\t\t\t\t\t$0.00");
+        category2.setAlignment(Pos.CENTER);
+        HBox category3 = addSpending("Gas\t\t\t\t\t\t0%\t\t\t\t\t$0.00");
+        category3.setAlignment(Pos.CENTER);
+        HBox category4 = addSpending("Phone Bill\t\t\t\t0%\t\t\t\t\t$0.00");
+        category4.setAlignment(Pos.CENTER);
+
+        contentBox.getChildren().addAll(contentTop, contentColumns, category1, category2, category3, category4);
+        contentBox.setPadding(new Insets(15, 15, 15, 15));
+
+        //Border Pane
+        borderPane.setTop(topBar);
+        borderPane.setBottom(newCategory);
+        borderPane.setCenter(contentBox);
+        borderPane.setPadding(new Insets(0, 0, 30, 0));
 
         return scene;
     }
 
     public Scene createSavingScene(Stage stage, Rectangle2D screensize) {
         Label monthlySavingsText;
+        Label contentTitle;
+        Label goalTitle;
+        Label percentGoalTitle;
+        Label amountInvestedTitle;
+        Button editSpendings;
+        Button newGoal;
 
         BorderPane borderPane = new BorderPane();
         BorderPane topBar = new BorderPane();
+        BorderPane contentTop = new BorderPane();
+        VBox contentBox = new VBox();
+        HBox contentColumns = new HBox();
         Scene scene = new Scene(borderPane, screensize.getWidth(), screensize.getHeight());
 
         //Navigation Buttons
@@ -145,7 +193,38 @@ public class Menu extends Application {
         topBar.setCenter(monthlySavingsText);
         topBar.setStyle("-fx-border-color: black");
 
+        //ContentBox
+        contentTitle = addLabel("Saving Goals", "Arial", 20);
+        editSpendings = addButton("Edit", 60, 10);
+        newGoal = addButton("Create New Goal", 500, 10);
+
+        //Content Top
+        contentTop.setLeft(contentTitle);
+        contentTop.setRight(editSpendings);
+
+        //Content Columns
+        goalTitle = addCategoryColumn("Goals");
+        percentGoalTitle = addCategoryColumn("% to Achieving Goal");
+        amountInvestedTitle = addCategoryColumn("Current Amount Invested To Goal");
+
+        contentColumns.getChildren().addAll(goalTitle, percentGoalTitle, amountInvestedTitle);
+        contentColumns.setAlignment(Pos.CENTER);
+
+        HBox category1 = addSpending("Car\t\t\t\t\t\t0%\t\t\t\t$0.00");
+        category1.setAlignment(Pos.CENTER);
+        HBox category2 = addSpending("Mortgage\t\t\t\t\t0%\t\t\t\t$0.00");
+        category2.setAlignment(Pos.CENTER);
+        HBox category3 = addSpending("PS5\t\t\t\t\t\t0%\t\t\t\t$0.00");
+        category3.setAlignment(Pos.CENTER);
+
+        contentBox.getChildren().addAll(contentTop, contentColumns, category1, category2, category3);
+        contentBox.setPadding(new Insets(15, 15, 15, 15));
+
+        //Border Pane
         borderPane.setTop(topBar);
+        borderPane.setBottom(newGoal);
+        borderPane.setCenter(contentBox);
+        borderPane.setPadding(new Insets(0, 0, 30, 0));
 
         return scene;
     }
@@ -201,10 +280,17 @@ public class Menu extends Application {
     }
 
     public Scene createHistoryScene(Stage stage, Rectangle2D screensize) {
-        Label balanceText;
+        Label remainingBalanceText;
+        Label contentTitle;
+        Label historyTitle;
+        Button editHistory;
+        Button loadMoreButton;
 
         BorderPane borderPane = new BorderPane();
         BorderPane topBar = new BorderPane();
+        BorderPane contentTop = new BorderPane();
+        VBox contentBox = new VBox();
+        HBox contentColumns = new HBox();
         Scene scene = new Scene(borderPane, screensize.getWidth(), screensize.getHeight());
 
         //Navigation Buttons
@@ -239,13 +325,46 @@ public class Menu extends Application {
         navigation.getChildren().addAll(menuLabel, spendingButton, savingButton, analysisButton, historyButton);
 
         //Top Bar
-        balanceText = addLabel("Remaining Balance:\n$0.00", "Arial", 24);
+        remainingBalanceText = addLabel("Remaining Balance:\n$0.00", "Arial", 24);
 
         topBar.setLeft(navigation);
-        topBar.setCenter(balanceText);
+        topBar.setCenter(remainingBalanceText);
         topBar.setStyle("-fx-border-color: black");
 
+        //ContentBox
+        contentTitle = addLabel("History", "Arial", 20);
+        editHistory = addButton("Edit", 60, 10);
+        loadMoreButton = addButton("Load More", 100, 10);
+
+        //Content Top
+        contentTop.setLeft(contentTitle);
+        contentTop.setRight(editHistory);
+
+        //Content Columns
+        historyTitle = addCategoryColumn("List History of Transactions:");
+
+        contentColumns.getChildren().addAll(historyTitle);
+        contentColumns.setAlignment(Pos.CENTER_LEFT);
+
+        HBox transaction1 = addSpending("Transaction 1");
+        transaction1.setAlignment(Pos.CENTER);
+        HBox transaction2 = addSpending("Transaction 2");
+        transaction2.setAlignment(Pos.CENTER);
+        HBox transaction3 = addSpending("Transaction 3");
+        transaction3.setAlignment(Pos.CENTER);
+        HBox transaction4 = addSpending("Transaction 4");
+        transaction4.setAlignment(Pos.CENTER);
+
+        contentBox.getChildren().addAll(contentTop, contentColumns, transaction1, transaction2, transaction3, transaction4);
+        contentBox.setPadding(new Insets(15, 15, 15, 15));
+
+        //Border Pane
         borderPane.setTop(topBar);
+        borderPane.setBottom(loadMoreButton);
+        borderPane.setAlignment(loadMoreButton, Pos.CENTER);
+        borderPane.setCenter(contentBox);
+        borderPane.setAlignment(contentBox, Pos.CENTER_LEFT);
+        borderPane.setPadding(new Insets(0, 0, 30, 0));
 
         return scene;
     }
@@ -273,4 +392,25 @@ public class Menu extends Application {
 
         return label;
     }
+
+    public Label addCategoryColumn(String columnName) {
+        Label label = addLabel(columnName, "Arial", 20);
+        //label.setAlignment(Pos.CENTER);
+        label.setPadding(new Insets(5, 50, 5, 50));
+
+        return label;
+    }
+
+    public HBox addSpending(String string) {
+        HBox line = new HBox();
+        Label spending;
+
+        spending = addCategoryColumn(string);
+        spending.setAlignment(Pos.CENTER_LEFT);
+
+        line.getChildren().addAll(spending);
+
+        return line;
+    }
+
 }
