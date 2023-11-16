@@ -49,7 +49,7 @@ public class Menu extends Application {
         stage.show();
     }
 
-    public Scene createMenuScene(Stage stage, Rectangle2D screensize, String sceneName) {
+    /*public Scene createMenuScene(Stage stage, Rectangle2D screensize, String sceneName) {
         Label displayedAmount;
         Label contentTitle;
         //Content Column Titles
@@ -62,7 +62,7 @@ public class Menu extends Application {
         Scene scene;
 
         return scene;
-    }
+    }*/
 
     public Scene createSpendingScene(Stage stage, Rectangle2D screensize) {
         Label monthlySpendingText;
