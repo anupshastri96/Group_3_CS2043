@@ -1,8 +1,8 @@
 package com.unb.budgetmaster.budgetmaster.domain.abs;
 import java.util.ArrayList;
 
-import com.unb.budgetmaster.budgetmaster.domain.model.Category;
 import com.unb.budgetmaster.budgetmaster.domain.model.Transaction;
+import com.unb.budgetmaster.budgetmaster.presentation.Category;
 
 public interface TransactionABS {
     Transaction getTransactionDetail(int id);

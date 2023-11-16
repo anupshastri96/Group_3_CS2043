@@ -3,8 +3,8 @@ package com.unb.budgetmaster.budgetmaster.domain.implementation;
 import java.util.ArrayList;
 
 import com.unb.budgetmaster.budgetmaster.domain.abs.TransactionABS;
-import com.unb.budgetmaster.budgetmaster.domain.model.Category;
 import com.unb.budgetmaster.budgetmaster.domain.model.Transaction;
+import com.unb.budgetmaster.budgetmaster.presentation.Category;
 
 public class TransactionImpl implements TransactionABS{
 

@@ -1,4 +1,4 @@
-package com.unb.budgetmaster.budgetmaster.domain.model;
+package com.unb.budgetmaster.budgetmaster.presentation;
 
 public class Category {
     String name ;
