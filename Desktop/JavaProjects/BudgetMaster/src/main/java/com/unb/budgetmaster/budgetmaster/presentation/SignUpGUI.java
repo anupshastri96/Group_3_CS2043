@@ -1,5 +1,6 @@
 package com.unb.budgetmaster.budgetmaster.presentation;
 
+import com.unb.budgetmaster.budgetmaster.domain.implementation.LoginImpl;
 import javafx.application.Application;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
@@ -11,10 +12,8 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
-import javafx.scene.layout.FlowPane;
 import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
-import javafx.event.ActionEvent;
 import javafx.scene.layout.VBox;
 
 
@@ -28,8 +27,11 @@ public class SignUpGUI extends Application{
     private TextField confirmPass_tf;
     private Text displaySignUp;
     private Text title;
+
+    private LoginImpl loginImpl;
  
     public void start(Stage signUpStage){
+        loginImpl = new LoginImpl();
         Rectangle2D screenSize = Screen.getPrimary().getVisualBounds();
         signUpStage.setMaximized(true);
         signUpStage.setTitle("Sign Up Page");
@@ -39,6 +41,8 @@ public class SignUpGUI extends Application{
 
         displaySignUp = new Text("Sign Up");
         displaySignUp.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.REGULAR, 30));
+
+        Label enterDetail_lb = new Label("Please enter your details");
 
         Label firstName_lb = new Label("First Name*");
         firstName_tf = new TextField();
@@ -65,10 +69,11 @@ public class SignUpGUI extends Application{
         confirmPass_tf.setMaxWidth(200);
 
         Button submit = new Button("Submit");
+        submit.setOnAction(event -> confirmSignUp(userName_tf.getText(), enterDetail_lb, passWord_tf.getText(), confirmPass_tf.getText()));
         
         VBox topPane = new VBox(10.0);
         topPane.setAlignment(Pos.CENTER);
-        topPane.getChildren().addAll(title, displaySignUp, firstName_lb, firstName_tf, middleName_lb, middleName_tf, lastName_lb, lastName_tf, userName_lb, userName_tf, passWord_lb, passWord_tf, confirmPass_lb, confirmPass_tf, submit);
+        topPane.getChildren().addAll(title, displaySignUp, enterDetail_lb, firstName_lb, firstName_tf, middleName_lb, middleName_tf, lastName_lb, lastName_tf, userName_lb, userName_tf, passWord_lb, passWord_tf, confirmPass_lb, confirmPass_tf, submit);
         
 
         Scene scene = new Scene(topPane, screenSize.getWidth(), screenSize.getHeight());
@@ -78,5 +83,20 @@ public class SignUpGUI extends Application{
 
     public static void main(String[] args) {
     	launch(args);
+    }
+
+    private void confirmSignUp(String username, Label enterDetail_lb, String password, String confirmPassword) {
+        if(loginImpl.doesUsernameExists(username)== true) {
+            enterDetail_lb.setText("Username already taken/Invalid username");
+            return;
+        }
+        
+        if(loginImpl.confirmPassword(password, confirmPassword) == false) {
+            enterDetail_lb.setText("Passwords do not match");
+            return;
+        }
+
+        // Add method here to switch to Security Questions page
+        // Passing in sign up information
     }
 }

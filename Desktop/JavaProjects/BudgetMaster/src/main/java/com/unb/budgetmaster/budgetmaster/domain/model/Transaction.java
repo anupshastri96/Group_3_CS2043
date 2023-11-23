@@ -8,5 +8,6 @@ public class Transaction {
     double amount ;
     String payee; 
     String type; 
-    Category category;
+    //Category category;
+    String category;
 }

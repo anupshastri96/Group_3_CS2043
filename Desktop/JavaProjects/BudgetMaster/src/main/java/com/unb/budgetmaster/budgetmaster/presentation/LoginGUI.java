@@ -1,5 +1,6 @@
 package com.unb.budgetmaster.budgetmaster.presentation;
 
+import com.unb.budgetmaster.budgetmaster.domain.implementation.LoginImpl;
 import javafx.application.Application;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
@@ -9,13 +10,10 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.Button;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
-import javafx.scene.layout.BorderPane;
 import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
-import javafx.event.ActionEvent;
 import javafx.scene.text.Font; 
 import javafx.scene.text.FontPosture; 
-import javafx.scene.text.FontWeight;
 import javafx.scene.layout.VBox;
 
 
@@ -25,7 +23,11 @@ public class LoginGUI extends Application{
     private Text displayLogin;
     private Text title;
 
+    //Implementation
+    private LoginImpl loginImpl;
+
     public void start (Stage loginStage){
+        loginImpl = new LoginImpl();
         Rectangle2D screenSize = Screen.getPrimary().getVisualBounds();
         loginStage.setMaximized(true);
 
@@ -44,21 +46,42 @@ public class LoginGUI extends Application{
         passWord_tf = new TextField();
         passWord_tf.setMaxWidth(200);
 
-         Button submit = new Button("Submit");
+        Button createAccountButton = new Button("Create Account");
+        createAccountButton.setOnAction(event -> switchToCA());
+
+        Button forgotPasswordButton = new Button("Forgot Password");
+        forgotPasswordButton.setOnAction(event -> switchToFP());
+
+        Button submit = new Button("Submit");
+        submit.setOnAction(event -> verifyLogin());
         
         VBox topPane = new VBox(10.0);
         topPane.setAlignment(Pos.CENTER);
         topPane.getChildren().addAll(title, displayLogin, userName_lb, userName_tf, passWord_lb, passWord_tf, submit);
         
 
-         Scene scene = new Scene(topPane, screenSize.getWidth(), screenSize.getHeight());
+        Scene scene = new Scene(topPane, screenSize.getWidth(), screenSize.getHeight());
          
 
-         loginStage.setScene(scene);
-         loginStage.show();
+        loginStage.setScene(scene);
+        loginStage.show();
     }
    
     public static void main(String[] args) {
     	launch(args);
+    }
+
+    private void verifyLogin() {
+        if(loginImpl.checkLoginInfo(userName_tf.getText(), passWord_tf.getText()) == true) {
+            
+        }
+    }
+
+    private void switchToFP() {
+
+    }
+
+    private void switchToCA() {
+        
     }
 }

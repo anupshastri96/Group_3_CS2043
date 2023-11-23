@@ -32,5 +32,9 @@ public class TransactionImpl implements TransactionABS{
     public ArrayList<Transaction> getTransactions(String type, Category category, String sort) {
         return null;
     }
+
+    public String toString(Transaction transaction) {
+        return "Test String";
+    }
     
 }
