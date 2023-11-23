@@ -1,469 +1,141 @@
 package com.unb.budgetmaster.budgetmaster.presentation;
 
-import com.unb.budgetmaster.budgetmaster.domain.implementation.CategoryImpl;
 
-import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.geometry.Rectangle2D;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.TableView;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
-import javafx.scene.text.Font;
-import javafx.stage.Screen;
-import javafx.stage.Stage;
 
-public class Menu extends Application {
-    private Stage stage;
-    private Scene scene;
-    private Rectangle2D screenSize;
-    //Menu Buttons + Label
-    private Label menuLabel;
-    private Button spendingButton, savingButton, analysisButton, historyButton;
-    private double menuButtonPrefWidth, menuButtonPrefHeight;
+public class Menu {
+    // Buttons that need to be tracked outside of functions
+    private Button historyButton;
+    private Button selectedButton; // Track the currently selected button
 
-    //Other Buttons
-    private Button editButton;
-
-    //Panes
-    private BorderPane mainPane, centralPane, contentPane;
-
-    //Boxes
-    private VBox navigation;
-    private HBox topBar;
-
-    //Labels
-    private Label displayedAmount;
-
-    //Menu Groups
+    // Menu Sections
+    private Spending spending;
+    private Savings savings;
     private History history;
 
-    //TableView
+    // UI Elements
+    private Label titleLabel;
+    private Label contentLabel;
+    private VBox contentContainer;
 
-    private Scene spendingScene;
-    private Scene savingScene;
-    private Scene analysisScene;
-    private Scene historyScene;
+    public void getContentMenu(Pane root, String username) {
+        // Initialize our Menu classes
+        spending = new Spending();
+        savings = new Savings();
+        history = new History();
 
-    public void start(Stage primaryStage) {
-        //Creating the scene and panes
-        screenSize = Screen.getPrimary().getVisualBounds();
-        stage = primaryStage;
+        // Initialize Menu UI components
+        initializeUI();
 
-        //Create the menu buttons and label
-        menuButtonPrefWidth = 120;
-        menuButtonPrefHeight = 30;
+        // Create layout
+        BorderPane mainPane = new BorderPane();
+        mainPane.setLeft(createMenuBar());
+        mainPane.setCenter(createContentArea());
 
-        menuLabel = addLabel("Menu:", "Arial", 16);
-        menuLabel.setStyle("-fx-font-weight: bold");
+        // Set default selection to "History" button
+        setButtonSelected(historyButton);
 
-        spendingButton = addButton("Spending", menuButtonPrefWidth, menuButtonPrefHeight);
-        spendingButton.setOnAction(event -> switchScenes(spendingScene, "Spending"));
-
-        savingButton = addButton("Saving", menuButtonPrefWidth, menuButtonPrefHeight);
-        savingButton.setOnAction(event -> switchScenes(savingScene, "Saving"));
-
-        analysisButton = addButton("Analysis", menuButtonPrefWidth, menuButtonPrefHeight);
-        analysisButton.setOnAction(event -> switchScenes(analysisScene, "Analysis"));
-
-        historyButton = addButton("History", menuButtonPrefWidth, menuButtonPrefHeight);
-        historyButton.setOnAction(event -> switchScenes(historyScene, "History"));
-
-        //Create box for menu buttons
-        navigation = new VBox();
-        navigation.setAlignment(Pos.TOP_CENTER);
-        navigation.setPrefWidth(300);
-        navigation.setSpacing(20);
-        navigation.setPadding(new Insets(5, 5, 5, 5));
-        navigation.setStyle("-fx-border-color: black");
-        navigation.setStyle("-fx-border-style: hidden solid hidden hidden");
-
-        navigation.getChildren().addAll(menuLabel, spendingButton, savingButton, analysisButton, historyButton);
-
-        //Create top bar for displayed amount
-        topBar = new HBox();
-        topBar.setAlignment(Pos.CENTER);
-        topBar.setStyle("-fx-border-color: black");
-        topBar.setStyle("-fx-border-style: hidden hidden solid hidden");
-
-        displayedAmount = addLabel("Your Monthly Spending: $0.00", "Arial", 24);
-        displayedAmount.setPadding(new Insets(50, 0, 50, 0));
-
-        topBar.getChildren().addAll(displayedAmount);
-
-        //Create content borderpane to be centered in the central pane
-        contentPane = new BorderPane();
-        
-
-        //Create central borderpane to be centered in the main borperpane
-        centralPane = new BorderPane();
-        centralPane.setTop(topBar);
-        centralPane.setCenter(contentPane);
-
-        //Create main borderpane to be set in scene
-        mainPane = new BorderPane();
-        mainPane.setLeft(navigation);
-        mainPane.setCenter(centralPane);
-
-        //Sets the scene and displays it
-        scene = new Scene(mainPane, screenSize.getWidth(), screenSize.getHeight());
-        stage.setScene(scene);
-        stage.setTitle("BudgetMaster - History");
-        stage.setMaximized(true);
-        stage.show();
+        root.getChildren().clear();
+        root.getChildren().add(mainPane);
     }
 
-    public Scene createSpendingScene(Stage stage, Rectangle2D screensize) {
-        Label displayedAmount;
-        Label contentTitle;
-        Label categoryTitle;
-        Label percentSpendTitle;
-        Label amountPaidTitle;
-        Button editSpendings;
-        Button newCategory;
+    private void initializeUI() {
+        titleLabel = new Label("Menu");
+        titleLabel.setStyle("-fx-font-weight: bold");
+        titleLabel.setStyle("-fx-font-size: 30");
 
-        BorderPane borderPane = new BorderPane();
-        BorderPane contentPane = new BorderPane();
-        BorderPane contentTop = new BorderPane();
-        VBox contentBox = new VBox();
-        HBox contentColumns = new HBox();
-        Scene scene = new Scene(borderPane, screensize.getWidth(), screensize.getHeight());
+        Label contentLabel = new Label("Current Balance: "); // Default content label
+        contentLabel.setStyle("-fx-font-weight: bold");
+        contentLabel.setStyle("-fx-font-size: 24");
 
-        //Navigation Buttons
-        menuButtonPrefWidth = 120;
-        menuButtonPrefHeight = 30;
-
-        spendingButton = addButton("Spending", menuButtonPrefWidth, menuButtonPrefHeight);
-
-        savingButton = addButton("Saving", menuButtonPrefWidth, menuButtonPrefHeight);
-        savingButton.setOnAction(event -> switchScenes(savingScene, "Saving"));
-
-        analysisButton = addButton("Analysis", menuButtonPrefWidth, menuButtonPrefHeight);
-        analysisButton.setOnAction(event -> switchScenes(analysisScene, "Analysis"));
-
-        historyButton = addButton("History", menuButtonPrefWidth, menuButtonPrefHeight);
-        historyButton.setOnAction(event -> switchScenes(historyScene, "History"));
-
-        //Add this line to event handler to make currently selected button transparent;
-        spendingButton.setStyle("-fx-background-color: transparent");
-
-        //Navigation Pane
-        VBox navigation = new VBox();
-        navigation.setAlignment(Pos.TOP_CENTER);
-        navigation.setPrefWidth(300);
-        navigation.setSpacing(20);
-        navigation.setPadding(new Insets(5, 5, 5, 5));
-        navigation.setStyle("-fx-border-color: black");
-        navigation.setStyle("-fx-border-style: hidden solid hidden hidden");
-
-        menuLabel = addLabel("Menu:", "Arial", 16);
-        menuLabel.setStyle("-fx-font-weight: bold");
-
-        navigation.getChildren().addAll(menuLabel, spendingButton, savingButton, analysisButton, historyButton);
-
-        //Top Bar
-        displayedAmount = addLabel("Your Monthly Spending: $0.00", "Arial", 24);
-        displayedAmount.setPadding(new Insets(10, 0, 0, 0));
-
-        //ContentBox
-        contentTitle = addLabel("Categories of Spending", "Arial", 20);
-        editSpendings = addButton("Edit", 60, 10);
-        newCategory = addButton("Create new Category of Spending", 500, 10);
-
-        //Content Top
-        contentTop.setLeft(contentTitle);
-        contentTop.setRight(editSpendings);
-
-        //Content Columns
-        categoryTitle = addCategoryColumn("Categories");
-        percentSpendTitle = addCategoryColumn("% of Spendings");
-        amountPaidTitle = addCategoryColumn("Amount Paid This Month");
-
-        contentColumns.getChildren().addAll(categoryTitle, percentSpendTitle, amountPaidTitle);
-        contentColumns.setAlignment(Pos.CENTER);
-
-        HBox category1 = addSpending("Grocery\t\t\t\t\t0%\t\t\t\t\t$0.00");
-        category1.setAlignment(Pos.CENTER);
-        HBox category2 = addSpending("Rent\t\t\t\t\t\t0%\t\t\t\t\t$0.00");
-        category2.setAlignment(Pos.CENTER);
-        HBox category3 = addSpending("Gas\t\t\t\t\t\t0%\t\t\t\t\t$0.00");
-        category3.setAlignment(Pos.CENTER);
-        HBox category4 = addSpending("Phone Bill\t\t\t\t0%\t\t\t\t\t$0.00");
-        category4.setAlignment(Pos.CENTER);
-
-        contentBox.getChildren().addAll(contentTop, contentColumns, category1, category2, category3, category4);
-        contentBox.setPadding(new Insets(15, 15, 15, 15));
-
-        //Content Pane
-        contentPane.setTop(displayedAmount);
-        contentPane.setAlignment(displayedAmount, Pos.CENTER);
-        contentPane.setCenter(contentBox);
-        contentPane.setBottom(newCategory);
-
-        //Border Pane
-        borderPane.setLeft(navigation);
-        borderPane.setCenter(contentPane);
-        borderPane.setAlignment(contentBox, Pos.CENTER_LEFT);
-        borderPane.setPadding(new Insets(0, 0, 5, 0));
-
-        return scene;
+        VBox contentContainer = new VBox(10);
+        contentContainer.setPadding(new Insets(10));
     }
 
-    public Scene createSavingScene(Stage stage, Rectangle2D screensize) {
-        Label displayedAmount;
-        Label contentTitle;
-        Label goalTitle;
-        Label percentGoalTitle;
-        Label amountInvestedTitle;
-        Button editSpendings;
-        Button newGoal;
+    private VBox createMenuBar() {
+        VBox menuBar = new VBox(10);
+        menuBar.setPadding(new Insets(10));
+        menuBar.setStyle("-fx-background-color: #e0e0e0");
+        menuBar.setAlignment(Pos.TOP_CENTER);
+        menuBar.setMinWidth(200);
 
-        BorderPane borderPane = new BorderPane();
-        BorderPane contentPane = new BorderPane();
-        BorderPane contentTop = new BorderPane();
-        VBox contentBox = new VBox();
-        HBox contentColumns = new HBox();
-        Scene scene = new Scene(borderPane, screensize.getWidth(), screensize.getHeight());
+        Button spendingsButton = createMenuButton("Spendings");
+        Button savingsButton = createMenuButton("Savings");
+        Button analysisButton = createMenuButton("Analysis");
+        historyButton = createMenuButton("History"); // Store the historyButton as an instance variable since it's default
 
-        //Navigation Buttons
-        menuButtonPrefWidth = 120;
-        menuButtonPrefHeight = 30;
+        menuBar.getChildren().addAll(titleLabel, spendingsButton, savingsButton, analysisButton, historyButton);
 
-        spendingButton = addButton("Spending", menuButtonPrefWidth, menuButtonPrefHeight);
-        spendingButton.setOnAction(event -> switchScenes(spendingScene, "Spending"));
-
-        savingButton = addButton("Saving", menuButtonPrefWidth, menuButtonPrefHeight);
-
-        analysisButton = addButton("Analysis", menuButtonPrefWidth, menuButtonPrefHeight);
-        analysisButton.setOnAction(event -> switchScenes(analysisScene, "Analysis"));
-
-        historyButton = addButton("History", menuButtonPrefWidth, menuButtonPrefHeight);
-        historyButton.setOnAction(event -> switchScenes(historyScene, "History"));
-
-        //Add this line to event handler to make currently selected button transparent;
-        savingButton.setStyle("-fx-background-color: transparent");
-
-        //Navigation Pane
-        VBox navigation = new VBox();
-        navigation.setAlignment(Pos.TOP_CENTER);
-        navigation.setPrefWidth(300);
-        navigation.setSpacing(20);
-        navigation.setPadding(new Insets(5, 5, 5, 5));
-        navigation.setStyle("-fx-border-color: black");
-        navigation.setStyle("-fx-border-style: hidden solid hidden hidden");
-
-        menuLabel = addLabel("Menu:", "Arial", 16);
-        menuLabel.setStyle("-fx-font-weight: bold");
-
-        navigation.getChildren().addAll(menuLabel, spendingButton, savingButton, analysisButton, historyButton);
-
-        //Top Bar
-        displayedAmount = addLabel("Your Monthly Savings: $0.00", "Arial", 24);
-        displayedAmount.setPadding(new Insets(10, 0, 0, 0));
-
-        //ContentBox
-        contentTitle = addLabel("Saving Goals", "Arial", 20);
-        editSpendings = addButton("Edit", 60, 10);
-        newGoal = addButton("Create New Goal", 500, 10);
-
-        //Content Top
-        contentTop.setLeft(contentTitle);
-        contentTop.setRight(editSpendings);
-
-        //Content Columns
-        goalTitle = addCategoryColumn("Goals");
-        percentGoalTitle = addCategoryColumn("% to Achieving Goal");
-        amountInvestedTitle = addCategoryColumn("Current Amount Invested To Goal");
-
-        contentColumns.getChildren().addAll(goalTitle, percentGoalTitle, amountInvestedTitle);
-        contentColumns.setAlignment(Pos.CENTER);
-
-        HBox category1 = addSpending("Car\t\t\t\t\t\t0%\t\t\t\t$0.00");
-        category1.setAlignment(Pos.CENTER);
-        HBox category2 = addSpending("Mortgage\t\t\t\t\t0%\t\t\t\t$0.00");
-        category2.setAlignment(Pos.CENTER);
-        HBox category3 = addSpending("PS5\t\t\t\t\t\t0%\t\t\t\t$0.00");
-        category3.setAlignment(Pos.CENTER);
-
-        contentBox.getChildren().addAll(contentTop, contentColumns, category1, category2, category3);
-        contentBox.setPadding(new Insets(15, 15, 15, 15));
-
-        //Content Pane
-        contentPane.setTop(displayedAmount);
-        contentPane.setAlignment(displayedAmount, Pos.CENTER);
-        contentPane.setCenter(contentBox);
-        contentPane.setBottom(newGoal);
-
-        //Border Pane
-        borderPane.setLeft(navigation);
-        borderPane.setCenter(contentPane);
-        borderPane.setAlignment(contentBox, Pos.CENTER_LEFT);
-        borderPane.setPadding(new Insets(0, 0, 5, 0));
-
-        return scene;
+        return menuBar;
     }
 
-    public Scene createAnalysisScene(Stage stage, Rectangle2D screensize) {
-        Label displayedAmount;
-
-        BorderPane borderPane = new BorderPane();
-        BorderPane contentPane = new BorderPane();
-        Scene scene = new Scene(borderPane, screensize.getWidth(), screensize.getHeight());
-
-        //Navigation Buttons
-        menuButtonPrefWidth = 120;
-        menuButtonPrefHeight = 30;
-
-        spendingButton = addButton("Spending", menuButtonPrefWidth, menuButtonPrefHeight);
-        spendingButton.setOnAction(event -> switchScenes(spendingScene, "Spending"));
-
-        savingButton = addButton("Saving", menuButtonPrefWidth, menuButtonPrefHeight);
-        savingButton.setOnAction(event -> switchScenes(savingScene, "Saving"));
-
-        analysisButton = addButton("Analysis", menuButtonPrefWidth, menuButtonPrefHeight);
-
-        historyButton = addButton("History", menuButtonPrefWidth, menuButtonPrefHeight);
-        historyButton.setOnAction(event -> switchScenes(historyScene, "History"));
-
-        //Add this line to event handler to make currently selected button transparent;
-        analysisButton.setStyle("-fx-background-color: transparent");
-
-        //Navigation Pane
-        VBox navigation = new VBox();
-        navigation.setAlignment(Pos.TOP_CENTER);
-        navigation.setPrefWidth(300);
-        navigation.setSpacing(20);
-        navigation.setPadding(new Insets(5, 5, 5, 5));
-        navigation.setStyle("-fx-border-color: black");
-        navigation.setStyle("-fx-border-style: hidden solid hidden hidden");
-
-        menuLabel = addLabel("Menu:", "Arial", 16);
-        menuLabel.setStyle("-fx-font-weight: bold");
-
-        navigation.getChildren().addAll(menuLabel, spendingButton, savingButton, analysisButton, historyButton);
-
-        //Top Bar
-        displayedAmount = addLabel("Analysis Page", "Arial", 24);
-        displayedAmount.setPadding(new Insets(10, 0, 0, 0));
-
-
-        //Content Pane
-        contentPane.setTop(displayedAmount);
-        contentPane.setAlignment(displayedAmount, Pos.CENTER);
-
-        //Border Pane
-        borderPane.setLeft(navigation);
-        borderPane.setCenter(contentPane);
-        borderPane.setPadding(new Insets(0, 0, 5, 0));
-
-        return scene;
+    private VBox createContentArea() {
+        VBox contentArea = new VBox(10);
+        VBox contentLabelBox = new VBox(30);
+        contentLabelBox.setPadding(new Insets(30));
+        contentLabelBox.setStyle("-fx-border-color: black");
+        contentLabelBox.setStyle("-fx-border-style: hidden hidden solid hidden");
+        contentLabelBox.getChildren().addAll(contentLabel);
+        contentLabelBox.setAlignment(Pos.CENTER);
+        contentArea.getChildren().addAll(contentLabelBox, contentContainer);
+        contentArea.setAlignment(Pos.TOP_CENTER);
+        return contentArea;
     }
 
-    /*public BorderPane createHistoryPane(Label displayedAmount, double spendingsAmount, int numberOfCategories, String[] categoryNames) {
-        BorderPane borderPane = new BorderPane();
+    private Button createMenuButton(String text) {
+        Button button = new Button(text);
 
-        //Buttons
-        Button editHistoryButton = addButton("Edit", 60, 10);
-        Button loadMoreButton = addButton("Load More", 100, 10);;
+        // Set button to be transparent by default
+        button.setStyle("-fx-background-color: transparent");
 
-        //Bottom HBox for buttons
-        HBox bottomHBox = new HBox(10);
-        bottomHBox.setPadding(new Insets(10));
-        bottomHBox.getChildren().addAll(editHistoryButton, loadMoreButton);
-
-        //borderPane.setTop();
-        borderPane.setBottom(bottomHBox);
-
-        Label contentTitle;
-        Label historyTitle;
-
-        displayedAmount.setText("Your Monthly Spending: " + String.valueOf(spendingsAmount));
-
-        BorderPane pane;
-        BorderPane contentTop = new BorderPane();
-        VBox contentBox = new VBox();
-        HBox contentColumns = new HBox();
-
-        //ContentBox
-        contentTitle = addLabel("History", "Arial", 20);
-        loadMoreButton.setAlignment(Pos.CENTER);
-
-        //Content Top
-        contentTop.setLeft(contentTitle);
-        //contentTop.setRight(editHistory);
-
-        //Content Columns
-        historyTitle = addCategoryColumn("List History of Transactions:");
-
-        contentColumns.getChildren().addAll(historyTitle);
-        contentColumns.setAlignment(Pos.CENTER_LEFT);
-
-        HBox transaction1 = addSpending("Transaction 1");
-        transaction1.setAlignment(Pos.CENTER);
-        HBox transaction2 = addSpending("Transaction 2");
-        transaction2.setAlignment(Pos.CENTER);
-        HBox transaction3 = addSpending("Transaction 3");
-        transaction3.setAlignment(Pos.CENTER);
-        HBox transaction4 = addSpending("Transaction 4");
-        transaction4.setAlignment(Pos.CENTER);
-
-        contentBox.getChildren().addAll(contentTop, contentColumns, transaction1, transaction2, transaction3, transaction4);
-        contentBox.setPadding(new Insets(15, 15, 15, 15));
-
-        //Content Pane
-        contentPane.setTop(displayedAmount);
-        contentPane.setAlignment(displayedAmount, Pos.CENTER);
-        contentPane.setCenter(contentBox);
-        contentPane.setBottom(loadMoreButton);
-
-        return pane;
-    }*/
-
-    public static void main(String[] args) {
-    	launch(args);
-    }
-
-    public void switchScenes(Scene scene, String sceneName) {
-        stage.setScene(scene);
-        stage.setTitle("BudgetMaster - " + sceneName);
-    }
-
-    public Button addButton(String buttonText, double prefWidth, double prefHeight) {
-        Button button = new Button(buttonText);
-        button.setPrefSize(prefWidth, prefHeight);
+        // Set button event
+        button.setOnAction(event -> {
+            handleMenuButtonClick(text);
+            setButtonSelected(button);
+        });
 
         return button;
     }
 
-    public Label addLabel(String labelName, String fontName, double fontSize) {
-        Label label = new Label(labelName);
-        Font font = new Font(fontName, fontSize);
-        label.setFont(font);
+    private void handleMenuButtonClick(String menuOption) {
+        // Clear existing content
+        contentContainer.getChildren().clear();
 
-        return label;
+        // Add specific content for the selected menu option
+        if(menuOption.equals("Spendings")) {
+            spending.getContent(contentLabel, contentContainer);
+        }
+        
+        if(menuOption.equals("Savings")) {
+            savings.getContent(contentLabel, contentContainer);
+        }
+
+        if(menuOption.equals("Analysis")) {
+
+        }
+
+        if(menuOption.equals("History")) {
+            history.getContent(contentLabel, contentContainer);
+        }
     }
 
-    public Label addCategoryColumn(String columnName) {
-        Label label = addLabel(columnName, "Arial", 20);
-        //label.setAlignment(Pos.CENTER);
-        label.setPadding(new Insets(5, 50, 5, 50));
+    private void setButtonSelected(Button selectedButton) {
+        // Reset style for the previously selected button
+        if (this.selectedButton != null) {
+            this.selectedButton.setStyle("-fx-background-color: transparent");
+        }
 
-        return label;
-    }
+        // Set the selected button style
+        selectedButton.setStyle("-fx-background-color: #a0a0a0");
 
-    public HBox addSpending(String string) {
-        HBox line = new HBox();
-        Label spending;
-
-        spending = addCategoryColumn(string);
-        spending.setAlignment(Pos.CENTER_LEFT);
-
-        line.getChildren().addAll(spending);
-
-        return line;
+        // Update the currently selected button
+        this.selectedButton = selectedButton;
     }
 }
+// End of Menu class

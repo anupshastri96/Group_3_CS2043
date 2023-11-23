@@ -12,7 +12,7 @@ import java.util.ArrayList;
 
 public class History {
 
-    private static final int TRANSACTIONS_PER_PAGE = 5;
+    private static final int TRANSACTIONS_DISPLAYED = 5;
     private static int startIndex = 0; // Starting index for displayed transactions
     private AnalysisImpl analysisImpl;
     private TransactionImpl transactionImpl;
@@ -20,7 +20,7 @@ public class History {
     Button previousButton;
 
     public void getContent(Label contentLabel, VBox contentContainer) {
-        //Instantiate our implementations
+        //Instantiate implementations
         transactionImpl = new TransactionImpl();
         analysisImpl = new AnalysisImpl();
 
@@ -52,13 +52,13 @@ public class History {
 
         // Set button event handlers
         previousButton.setOnAction(event -> {
-            startIndex = Math.max(startIndex - TRANSACTIONS_PER_PAGE, 0);
+            startIndex = Math.max(startIndex - TRANSACTIONS_DISPLAYED, 0);
             updateTransactions(transactionsContainer, transactionImpl, nextButton, previousButton);
         });
 
         nextButton.setOnAction(event -> {
             int totalTransactions = transactionImpl.getTransactions(null, null, null).size();
-            startIndex = Math.min(startIndex + TRANSACTIONS_PER_PAGE, totalTransactions - 1);
+            startIndex = Math.min(startIndex + TRANSACTIONS_DISPLAYED, totalTransactions - 1);
             updateTransactions(transactionsContainer, transactionImpl, nextButton, previousButton);
         });
 
@@ -80,7 +80,7 @@ public class History {
         ArrayList<Transaction> transactionsList = transactionImpl.getTransactions(null, null, null);
 
         // Display transactions based on the current startIndex
-        for (int i = startIndex; i < startIndex + TRANSACTIONS_PER_PAGE && i < transactionsList.size(); i++) {
+        for (int i = startIndex; i < startIndex + TRANSACTIONS_DISPLAYED && i < transactionsList.size(); i++) {
             Label transactionLabel = new Label(transactionsList.get(i).toString());
             transactionsContainer.getChildren().add(transactionLabel);
         }
@@ -94,9 +94,10 @@ public class History {
         int totalTransactions = transactionsList.size();
 
         // Show/hide Next button based on remaining transactions
-        nextButton.setDisable(startIndex + TRANSACTIONS_PER_PAGE >= totalTransactions);
+        nextButton.setDisable(startIndex + TRANSACTIONS_DISPLAYED >= totalTransactions);
 
         // Show/hide Previous button based on the current startIndex
         previousButton.setDisable(startIndex <= 0);
     }
 }
+// End of History class

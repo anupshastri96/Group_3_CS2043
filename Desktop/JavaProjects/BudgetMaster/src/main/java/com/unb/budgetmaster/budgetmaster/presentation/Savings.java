@@ -1,6 +1,9 @@
 package com.unb.budgetmaster.budgetmaster.presentation;
 
 import com.unb.budgetmaster.budgetmaster.domain.implementation.AnalysisImpl;
+import com.unb.budgetmaster.budgetmaster.domain.implementation.TransactionImpl;
+import com.unb.budgetmaster.budgetmaster.domain.model.Transaction;
+
 import java.util.ArrayList;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -8,12 +11,13 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
 public class Savings {
+    // Implementation Instances
     private AnalysisImpl analysisImpl;
-    private SavingImpl savingImpl;
+    private TransactionImpl transactionImpl;
 
     public void getContent(Label contentLabel, VBox contentContainer) {
-        //Instantiate our implementations
-        savingImpl = new SavingImpl();
+        // Instantiate implementations
+        transactionImpl = new TransactionImpl();
         analysisImpl = new AnalysisImpl();
 
         // Modify contentLabel
@@ -52,11 +56,11 @@ public class Savings {
         contentContainer.getChildren().addAll(titleBox, headerRow, separator);
 
         // Create array list of Goal objects
-        ArrayList<Goal> goals = savingImpl.getGoalList();
+        ArrayList<Transaction> transactions = transactionImpl.getTransactions("Savings", null, null);
 
-        // Display up to 5 Goal objects
-        for (int i = 0; i < Math.min(goals.length, 5); i++) {
-            Goal goal = goals.get(i);
+        // Display up to 5 goals
+        for (int i = 0; i < Math.min(transactions.size(), 5); i++) {
+            Transaction goal = transactions.get(i);
             HBox goalRow = createGoalRow(goal);
             contentContainer.getChildren().add(goalRow);
         }
@@ -66,8 +70,8 @@ public class Savings {
         contentContainer.getChildren().add(createNewGoalButton);
     }
 
-    private static HBox createGoalRow(Goal goal) {
-        Label goalLabel = new Label(goal.getGoal());
+    private static HBox createGoalRow(Transaction goal) {
+        Label goalLabel = new Label(goal.get());
         Label percentageLabel = new Label(goal.getPercentage());
         Label currentAmountLabel = new Label(goal.getCurrentAmount());
 
