@@ -1,0 +1,28 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Menu",
+            "request": "launch",
+            "mainClass": "com.unb.budgetmaster.budgetmaster/com.unb.budgetmaster.budgetmaster.presentation.Menu",
+            "projectName": "BudgetMaster"
+        },
+        {
+            "type": "java",
+            "name": "LoginGUI",
+            "request": "launch",
+            "mainClass": "com.unb.budgetmaster.budgetmaster/com.unb.budgetmaster.budgetmaster.presentation.LoginGUI",
+            "projectName": "BudgetMaster"
+        },
+        {
+            "type": "java",
+            "name": "Current File",
+            "request": "launch",
+            "mainClass": "${file}"
+        }
+    ]
+}
