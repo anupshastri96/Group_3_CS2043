@@ -8,16 +8,17 @@ import java.util.Scanner;
 import java.util.InputMismatchException;
 public class GetUserAccountInformation {
     public void main(String[]args){
-        Connection connector = openConnection();
-        String userName = args[0];
+        Connection connector = openConnection(); //opens connection to SQL database
+        String userName = args[0]; //reads in username and stores it
         if(connector = null){
             System.err.println("Unable to connect to the database"); 
             System.exit(1);
         }
-
+        //Preparing statement for query with connector and username
         PreparedStatement statement = preparedStatementAccount(connector, userName);
         try{
             ResultSet rs = statement.executeQuery();
+            //if query returns results from database, each piece of information is stored in a variable
             if(rs.next()){
                 String first_name = rs.getString("account_name");
                 String middle_name = rs.getString("account_middlename");
@@ -36,6 +37,7 @@ public class GetUserAccountInformation {
         closeConnection(connector);
 
     }
+    //Method to create a connection to SQL database
     private static Connection openConnection(){
         final String URL = "";
         final String USER = "";
@@ -50,6 +52,7 @@ public class GetUserAccountInformation {
         }
         return connection;
     }
+    //Method to close connection to SQL database
     private static void closeConnection(Connection connector){
         try{
             connector.close();
@@ -58,9 +61,11 @@ public class GetUserAccountInformation {
             System.err.println("Could not close connection " + e.getMessage()); 
         }
     }
+     //Method to prepare statement to execute the query to SQL database
     private static PreparedStatement preparedStatementAccount(Connection connection, String userName){
         PreparedStatement result = null;
         try{
+            //Query to get information from SQL database
             String query = "select account_name, account_middlename, account_lastname, account_question1, account_answer1, account_question2, account_answer2, user_name, user_password " +
                            "from user_data natural join account_data " +
                            "where user_name = " + userName + ";"; 
@@ -69,6 +74,7 @@ public class GetUserAccountInformation {
         catch(SQLException e){
             System.err.println("Could not prepare SQL Statement " + e.getMessage());
         }
+        //Return results from query
         return result;
     }
 }

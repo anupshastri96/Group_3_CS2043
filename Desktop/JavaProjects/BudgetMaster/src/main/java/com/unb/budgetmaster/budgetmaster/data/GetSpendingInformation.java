@@ -7,19 +7,18 @@ import java.sql.PreparedStatement;
 import java.util.Scanner;
 import java.util.InputMismatchException;
 public class GetSpendingInformation {
-    
-
     public void main(String[]args){
-        Connection connector = openConnection();
-        String userName = args[0];
+        Connection connector = openConnection(); //opens connection to SQL database
+        String userName = args[0]; //reads in username and stores it
         if(connector = null){
             System.err.println("Unable to connect to the database"); 
             System.exit(1);
         }
-
+        //Preparing statement for query with connector and username
         PreparedStatement statement = preparedStatementSpending(connector, userName);
         try{
             ResultSet rs = statement.executeQuery();
+            //if query returns results from database, each piece of information is stored in a variable
             if(rs.next()){
                 double totalSpending = rs.getDouble("spendings_overall_total");
                 double categorySpending = rs.getDouble("spendings_per_category");
@@ -33,6 +32,7 @@ public class GetSpendingInformation {
         closeConnection(connector);
 
     }
+    //Method to create a connection to SQL database
     private static Connection openConnection(){
         final String URL = "";
         final String USER = "";
@@ -47,6 +47,7 @@ public class GetSpendingInformation {
         }
         return connection;
     }
+     //Method to close connection to SQL database
     private static void closeConnection(Connection connector){
         try{
             connector.close();
@@ -55,20 +56,21 @@ public class GetSpendingInformation {
             System.err.println("Could not close connection " + e.getMessage()); 
         }
     }
+    //Method to prepare statement to execute the query to SQL database
     private static PreparedStatement preparedStatementSpending(Connection connection, String userName){
         PreparedStatement result = null;
         try{
+            //Query to get information from SQL database
             String query = "select spendings_overall_total, spendings_per_category, category_name, transaction_name" +
-                           "from transaction_data natural join category_data natural join transaction_type " +
-                           "where user_name = " + userName + ";"; 
-                           
+                            "from transaction_data natural join category_data natural join transaction_type " +
+                            "where user_name = " + userName + ";"; 
+                            
             result = connector.preparedStatement(query);
         }
         catch(SQLException e){
             System.err.println("Could not prepare SQL Statement " + e.getMessage());
         }
+        //Return results from query
         return result;
     }
-    
-
 }
