@@ -6,17 +6,10 @@
     "configurations": [
         {
             "type": "java",
-            "name": "Current File",
+            "name": "BudgetPlannerApp",
             "request": "launch",
-            "mainClass": "${file}"
-        },
-        {
-            "type": "java",
-            "name": "App",
-            "request": "launch",
-            "mainClass": "BudgetMaster.BudgetMaster",
-            "projectName": "BudgetMaster_3d3aaa08",
-            "vmArgs": "--module-path \"C:\\Users\\alexp\\Downloads\\openjfx-21.0.1_windows-x64_bin-sdk (1)\\javafx-sdk-21.0.1\\lib\" --add-modules javafx.controls,javafx.fxml"
+            "mainClass": "com.unb.budgetmaster/com.unb.budgetmaster.presentation.BudgetPlannerApp",
+            "projectName": "BudgetMaster"
         }
     ]
 }
