@@ -1,5 +1,6 @@
 package com.unb.budgetmaster.data.implementation;
 
+import java.beans.Statement;
 import java.util.ArrayList;
 
 import com.unb.budgetmaster.domain.abs.TransactionABS;
@@ -19,13 +20,20 @@ public class TransactionImpl implements TransactionABS{
     }
 
     @Override
-    public void addTransaction(Category category, String type) {
-      
+    public void addTransaction(String date, int id, double amount, String type, String category) {
+        Statement statement = connection.createStatement();
+        String transactionDate  = date;
+        int transactionID = id;
+        double transactionAmount = amount;
+        String transactionType = type;
+        String categoryType = category;
+        String insertTransaction = "insert into transaction_data(transaction_date, transaction_id, transaction_amount, transaction_type) values(" + transactionDate + "," + transactionID + "," + transactionAmount + "," + transactionType + "," + categoryType + ");";
+        statement.executeUpdate(insertTransaction);
     }
 
     @Override
     public void deleteTransaction(Transaction transaction) {
-    
+     
     }
 
     @Override

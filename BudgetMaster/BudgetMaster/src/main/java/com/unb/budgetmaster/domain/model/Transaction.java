@@ -2,11 +2,9 @@ package com.unb.budgetmaster.domain.model;
 
 public class Transaction {
     String date ;
-    int id;
+    static int id;
     double amount ;
-    String payee; 
-    String type; 
-    //Category category;
+    String transacitonType; 
     String category;
 
     public String getDate() {
@@ -33,20 +31,12 @@ public class Transaction {
         this.amount = amount;
     }
 
-    public String getPayee() {
-        return this.payee;
-    }
-
-    public void setPayee(String payee) {
-        this.payee = payee;
-    }
-
     public String getType() {
-        return this.type;
+        return this.transacitonType;
     }
 
     public void setType(String type) {
-        this.type = type;
+        this.transactionType = type;
     }
 
     public String getCategory() {

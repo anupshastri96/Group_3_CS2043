@@ -13,7 +13,13 @@ public class BudgetPlannerApp extends Application {
     private LoginUI loginUI;
 
     public static void main(String[] args) {
+        Connection connection = connectDatabase();
+        if(connection = null){
+            System.err.println("Unable to connect to database.");
+            System.exit(1);
+        }
         launch(args);
+
     }
 
     @Override
