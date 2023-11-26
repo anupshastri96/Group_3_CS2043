@@ -1,6 +1,5 @@
-package com.unb.budgetmaster.budgetmaster.presentation;
+package com.unb.budgetmaster.presentation;
 
-import java.util.ArrayList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -15,7 +14,8 @@ public class Menu {
     private Button selectedButton; // Track the currently selected button
 
     // Menu Sections
-    //private Analysis analysis; //ADD THIS IN
+    private Spending spending;
+    private Savings savings;
     private History history;
 
     // UI Elements
@@ -23,9 +23,10 @@ public class Menu {
     private Label contentLabel;
     private VBox contentContainer;
 
-    public void getContentMenu(Pane root, ArrayList<String> loginInformation) {
+    public void getContentMenu(Pane root, String username) {
         // Initialize our Menu classes
-        //analysis = new Analysis(); // ADD THIS IN
+        spending = new Spending();
+        savings = new Savings();
         history = new History();
 
         // Initialize Menu UI components
@@ -33,7 +34,7 @@ public class Menu {
 
         // Create layout
         BorderPane mainPane = new BorderPane();
-        mainPane.setLeft(createMenuBar(loginInformation));
+        mainPane.setLeft(createMenuBar());
         mainPane.setCenter(createContentArea());
 
         // Set default selection to "History" button
@@ -56,17 +57,17 @@ public class Menu {
         contentContainer.setPadding(new Insets(10));
     }
 
-    private VBox createMenuBar(ArrayList<String> loginInformation) {
+    private VBox createMenuBar() {
         VBox menuBar = new VBox(10);
         menuBar.setPadding(new Insets(10));
         menuBar.setStyle("-fx-background-color: #e0e0e0");
         menuBar.setAlignment(Pos.TOP_CENTER);
         menuBar.setMinWidth(200);
 
-        Button spendingsButton = createMenuButton("Spendings", loginInformation);
-        Button savingsButton = createMenuButton("Savings", loginInformation);
-        Button analysisButton = createMenuButton("Analysis", loginInformation);
-        historyButton = createMenuButton("History", loginInformation); // Store the historyButton as an instance variable since it's default
+        Button spendingsButton = createMenuButton("Spendings");
+        Button savingsButton = createMenuButton("Savings");
+        Button analysisButton = createMenuButton("Analysis");
+        historyButton = createMenuButton("History"); // Store the historyButton as an instance variable since it's default
 
         menuBar.getChildren().addAll(titleLabel, spendingsButton, savingsButton, analysisButton, historyButton);
 
@@ -86,7 +87,7 @@ public class Menu {
         return contentArea;
     }
 
-    private Button createMenuButton(String text, ArrayList<String> loginInformation) {
+    private Button createMenuButton(String text) {
         Button button = new Button(text);
 
         // Set button to be transparent by default
@@ -94,23 +95,32 @@ public class Menu {
 
         // Set button event
         button.setOnAction(event -> {
-            handleMenuButtonClick(text, loginInformation);
+            handleMenuButtonClick(text);
             setButtonSelected(button);
         });
 
         return button;
     }
 
-    private void handleMenuButtonClick(String menuOption, ArrayList<String> loginInformation) {
+    private void handleMenuButtonClick(String menuOption) {
         // Clear existing content
         contentContainer.getChildren().clear();
+
+        // Add specific content for the selected menu option
+        if(menuOption.equals("Spendings")) {
+            spending.getContent(contentLabel, contentContainer);
+        }
+        
+        if(menuOption.equals("Savings")) {
+            savings.getContent(contentLabel, contentContainer);
+        }
 
         if(menuOption.equals("Analysis")) {
 
         }
 
         if(menuOption.equals("History")) {
-            history.getContent(contentLabel, contentContainer, loginInformation);
+            history.getContent(contentLabel, contentContainer);
         }
     }
 

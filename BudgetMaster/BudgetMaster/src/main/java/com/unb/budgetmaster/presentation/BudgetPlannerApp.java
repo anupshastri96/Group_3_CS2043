@@ -1,5 +1,6 @@
-package com.unb.budgetmaster.budgetmaster.presentation;
+package com.unb.budgetmaster.presentation;
 
+import com.unb.budgetmaster.data.implementation.DatabaseImpl;
 import javafx.application.Application;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
@@ -11,7 +12,6 @@ public class BudgetPlannerApp extends Application {
 
     // UI Instances
     private LoginUI loginUI;
-
     public static void main(String[] args) {
         launch(args);
     }
@@ -32,6 +32,8 @@ public class BudgetPlannerApp extends Application {
 
         // Create scene
         Scene scene = new Scene(root, screenSize.getWidth(), screenSize.getHeight());
+        DatabaseImpl database = new DatabaseImpl();
+        database.connectDatabase();
 
         // Set scene and show stage
         primaryStage.setScene(scene);
