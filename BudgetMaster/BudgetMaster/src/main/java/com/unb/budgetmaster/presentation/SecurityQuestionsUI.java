@@ -27,16 +27,11 @@ public class SecurityQuestionsUI {
 
     // Security Questions Array
     private String[] securityQuestionsArray = {
-        "Question 1",
-        "Question 2",
-        "Question 3",
-        "Question 4",
-        "Question 5",
-        "Question 6",
-        "Question 7",
-        "Question 8",
-        "Question 9",
-        "Question 10"
+        "Question 1: What is your favorite childhood pet's name",
+        "Question 2: In which city were you born?",
+        "Question 3: What is your mother's maiden name?",
+        "Question 4: What is the name of your favorite teacher in high school?",
+        "Question 5: What is the model of your favourite car?"
     };
 
     public void getContent(Pane root, ArrayList<String> loginInformation, Boolean isNewUser) {
