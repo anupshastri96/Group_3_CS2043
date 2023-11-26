@@ -1,6 +1,8 @@
-package com.unb.budgetmaster.presentation;
+package com.unb.budgetmaster.budgetmaster.presentation;
 
-import com.unb.budgetmaster.data.implementation.LoginImpl;
+import java.util.ArrayList;
+
+import com.unb.budgetmaster.budgetmaster.domain.implementation.LoginImpl;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Button;
@@ -20,14 +22,14 @@ public class SignUpUI {
     private LoginImpl loginImpl;
 
     // UI Instances
-    //private SecurityQuestionsUI securityQuestionsUI; // Change name of class to match this
+    private SecurityQuestionsUI securityQuestionsUI; // Change name of class to match this
  
     public void getContent(Pane root){
         // Instantiate Implementation
         loginImpl = new LoginImpl();
 
         // UI Implementation
-        //securityQuestionsUI = new SecurityQuestionsUI();
+        securityQuestionsUI = new SecurityQuestionsUI();
         
         // Create text for title
         Text title = new Text("Budget Master");
@@ -128,10 +130,15 @@ public class SignUpUI {
         }
 
         // Create array of strings for the login information
-        String[] loginInformation = {firstname, middlename, lastname, username, password, confirmPassword};
+        ArrayList<String> loginInformation = new ArrayList<String>();
+        loginInformation.add(firstname);
+        loginInformation.add(middlename);
+        loginInformation.add(lastname);
+        loginInformation.add(username);
+        loginInformation.add(password);
 
         // Switch to Security Questions Page
-        //securityQuestionsUI.getContent(root, loginInformation);
+        securityQuestionsUI.getContent(root, loginInformation, true);
     }
 }
 // End of SignUpUI class
