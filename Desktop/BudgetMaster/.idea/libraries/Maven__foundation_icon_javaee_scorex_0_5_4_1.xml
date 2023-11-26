@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Maven: foundation.icon:javaee-scorex:0.5.4.1">
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/foundation/icon/javaee-scorex/0.5.4.1/javaee-scorex-0.5.4.1.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$MAVEN_REPOSITORY$/foundation/icon/javaee-scorex/0.5.4.1/javaee-scorex-0.5.4.1-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$MAVEN_REPOSITORY$/foundation/icon/javaee-scorex/0.5.4.1/javaee-scorex-0.5.4.1-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

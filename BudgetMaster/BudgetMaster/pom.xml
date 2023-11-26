@@ -40,7 +40,6 @@
             <version>${junit.version}</version>
             <scope>test</scope>
         </dependency>
-    
       <dependency>
         <groupId>foundation.icon</groupId>
         <artifactId>javaee-scorex</artifactId>
