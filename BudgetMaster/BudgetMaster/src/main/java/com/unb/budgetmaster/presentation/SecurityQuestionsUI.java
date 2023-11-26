@@ -155,6 +155,8 @@ public class SecurityQuestionsUI {
             loginInformation.add(question2);
             loginInformation.add(answer2);
 
+            loginImpl.createUser(loginInformation);
+
             menu.getContentMenu(root, loginInformation);
         }
 
