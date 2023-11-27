@@ -1,12 +1,16 @@
 package com.unb.budgetmaster.data.implementation;
 
+import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
 
 import com.unb.budgetmaster.domain.abs.LoginABS;
 import com.unb.budgetmaster.domain.model.User;
+import com.unb.budgetmaster.data.implementation.DatabaseImpl;
 
 public class LoginImpl implements LoginABS {
+    DatabaseImpl data = new DatabaseImpl();
+    Connection connection = data.connectDatabase();
 
     @Override
     public Boolean checkLoginInfo(String username, String password) {
@@ -34,11 +38,15 @@ public class LoginImpl implements LoginABS {
 
     @Override
     public Boolean doesUsernameExists(String username) {
+        try{
+            
+        }
         return null;
     }
 
     @Override
     public void createUser(User user) {
+        
         String name = user.getFirstName();
         String middleName = user.getMiddleName();
         String lastName = user.getLastName();
@@ -53,7 +61,7 @@ public class LoginImpl implements LoginABS {
             Statement statement = connection.createStatement();
             //Inserts username and password into user_data table
             String insertUserSQL = "insert into user_data values(" + userName + "," + passWord + ");";
-             //Inserts name, middle name, and last name into account_data table
+            //Inserts name, middle name, and last name into account_data table
             String insertAccountSQL = "insert into account_data values(" + name + "," + middleName + "," + lastName + ");";
             //Inserts security question 1, question 2, answer 1, and answer 2 into security_data table
             String insertSecuritySQL = "insert into security_data values(" + q1 + "," + a1 + "," + q2 + "," + a2 + ");";

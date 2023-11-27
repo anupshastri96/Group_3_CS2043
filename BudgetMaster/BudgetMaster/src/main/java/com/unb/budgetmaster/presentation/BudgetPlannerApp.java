@@ -1,5 +1,7 @@
 package com.unb.budgetmaster.budgetmaster.presentation;
 
+import com.unb.budgetmaster.data.implementation.DatabaseImpl;
+
 import javafx.application.Application;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
@@ -13,7 +15,7 @@ public class BudgetPlannerApp extends Application {
     private LoginUI loginUI;
 
     public static void main(String[] args) {
-        Connection connection = connectDatabase();
+        
         if(connection = null){
             System.err.println("Unable to connect to database.");
             System.exit(1);
