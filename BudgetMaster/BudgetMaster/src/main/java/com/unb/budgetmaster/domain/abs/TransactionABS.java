@@ -12,4 +12,5 @@ public interface TransactionABS {
     ArrayList<Transaction> getTransactions(String type, Category category);
     ArrayList<Transaction> getTransactions(String type);
     ArrayList<Transaction> getTransactions(Category category);
+    ArrayList<Transaction> getTransactions();
 }
