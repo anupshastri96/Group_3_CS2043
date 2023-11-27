@@ -51,14 +51,14 @@ public class TransactionImpl implements TransactionABS{
 
     @Override
     public void setTransactionDetails(Transaction transaction) {
+        int transactionID = transaction.getID();
+        Date transactionDate = Date.valueOf(transaction.getDate());
+        double transactionAmount = transaction.getAmount();
+        String transactionType = transaction.getType();
+        String categoryType = transaction.getCategory();
+        String payee = transaction.getPayee();
         try{
             Statement statement = connection.createStatement();
-            int transactionID = transaction.getID();
-            Date transactionDate = Date.valueOf(transaction.getDate());
-            double transactionAmount = transaction.getAmount();
-            String transactionType = transaction.getType();
-            String categoryType = transaction.getCategory();
-            String payee = transaction.getPayee();
             String changeTransaction = "update transaction_data set transaction_date " + transactionDate
             + ", transaction_amount = " + transactionAmount
             + ", transaction_type = " + transactionType

@@ -36,7 +36,6 @@ public class LoginImpl implements LoginABS {
         return success;
     }
 
-    public User getLoginInfo
     @Override
     public Boolean confirmPassword(String pass, String confirmPass) {
         if(pass.equals(confirmPass)){
@@ -134,12 +133,65 @@ public class LoginImpl implements LoginABS {
         catch(SQLException e){
             e.printStackTrace();
         }
-
     }
-    
+
+    @Override
+    public User getUser(){
+        User user;
+        String name = "";
+        String middleName = "";
+        String lastName = "";
+        String passWord = "";
+        String q1 = "";
+        String q2 = "";
+        String a1 = "";
+        String a2 = "";
+        try{
+            String getUserQuery = "select account_name, account_middlename, account_lastname, user_password, account_question1, account_question2, account_answer1, account_answer2 from user_data natural join account_data natural join security_data where user_name = " + Database.user.getUsername() + ";";
+            PreparedStatement preparedStatement = connection.prepareStatement(getUserQuery);
+            ResultSet results = preparedStatement.executeQuery();
+
+            if(results.next()){
+                name = results.getString("account_name");
+                middleName = results.getString("account_middlename");
+                lastName = results.getString("account_lastname");
+                passWord = results.getString("user_password");
+                q1 = results.getString("account_question1");
+                q2 = results.getString("account_question2");
+                a1 = results.getString("account_answer1");
+                a2 = results.getString("account_answer2");
+            }
+        }
+        catch(SQLException e){
+            e.printStackTrace();
+        }
+        user = new User(name, middleName, lastName, passWord, Database.user.getUsername(), q1, a1, q2, a2);
+        return user;
+    }
     @Override
     public void setLoginDetails(User user) {
-        
+        String name = user.getFirstName();
+        String middleName = user.getMiddleName();
+        String lastName = user.getLastName();
+        String passWord = user.getPassword();
+        String q1 = user.getSecQ1();
+        String q2 = user.getSecQ2();
+        String a1 = user.getSecQ1Answer();
+        String a2 = user.getSecQ2Answer();
+        try{
+            Statement statement = connection.createStatement();
+            String changePassword = "update user_data set user_password = " + passWord + " where user_name = " + Database.user.getUsername() + ";";
+            String changeAccount = "update account_data set account_name = " + "'" + name + "', account_middlename = " + "'" + middleName + "', account_lastname = " + "'" + lastName + " where user_name = " + Database.user.getUsername() + ";";
+            String changeSecurity = "update security_data set account_question1 =" + "'" + q1 + "', account_question2 = " + "'" + q2 + "', account_answer1 = " + "'" + a1 + "', account_answer2 = " + a2 + " where user_name = " + Database.user.getUsername() + ";";
+            
+            statement.executeQuery(changePassword);
+            statement.executeQuery(changeAccount);
+            statement.executeQuery(changeSecurity);
+            
+        }
+        catch(SQLException e){
+            e.printStackTrace();
+        }
     }
 
 }

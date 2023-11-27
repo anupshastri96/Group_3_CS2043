@@ -9,5 +9,6 @@ public interface LoginABS {
     Boolean checkSecurityQuestions(String answer1, String answer2);
     Boolean doesUsernameExists(String username);
     void createUser(User user);
+    User getUser();
     void setLoginDetails(User user);
 }
