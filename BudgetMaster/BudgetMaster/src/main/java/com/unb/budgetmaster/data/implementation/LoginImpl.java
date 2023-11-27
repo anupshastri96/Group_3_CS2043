@@ -56,10 +56,10 @@ public class LoginImpl implements LoginABS {
     }
 
     @Override
-    public void setSecurityQuestions(String answer1, String answer2) {
+    public void setSecurityQuestions(String answer1, String answer2, String username) {
         try{
             Statement statement = connection.createStatement();
-            String insertSecurityQuestions = "insert into security_data(account_answer1, account_answer2) values(" + answer1 + ", " + answer2 + ")";
+            String insertSecurityQuestions = "insert into security_data(account_answer1, account_answer2) values(" + answer1 + ", " + answer2 + " where user_name = " + username + ")";
             statement.executeQuery(insertSecurityQuestions);
         }
         catch(SQLException e){
@@ -68,13 +68,13 @@ public class LoginImpl implements LoginABS {
     }
 
     @Override
-    public Boolean checkSecurityQuestions(String answer1, String answer2) {
+    public Boolean checkSecurityQuestions(String answer1, String answer2, String username) {
         String a1 = "";
         String a2 = "";
         Boolean success = false;
 
         try{
-            String getAnswers = "select account_answer1, account_answer2 from security_data;";
+            String getAnswers = "select account_answer1, account_answer2 from security_data where username = " + username + ";";
             PreparedStatement statement = connection.prepareStatement(getAnswers);
             ResultSet results = statement.executeQuery();
 
@@ -132,9 +132,9 @@ public class LoginImpl implements LoginABS {
             //Inserts username and password into user_data table
             String insertUserSQL = "insert into user_data values(" + userName + "," + passWord + ");";
             //Inserts name, middle name, and last name into account_data table
-            String insertAccountSQL = "insert into account_data values(" + name + "," + middleName + "," + lastName + ");";
+            String insertAccountSQL = "insert into account_data values(" + name + "," + middleName + "," + lastName + ") where user_name = " + userName + ";";
             //Inserts security question 1, question 2, answer 1, and answer 2 into security_data table
-            String insertSecuritySQL = "insert into security_data values(" + q1 + "," + a1 + "," + q2 + "," + a2 + ");";
+            String insertSecuritySQL = "insert into security_data values(" + q1 + "," + a1 + "," + q2 + "," + a2 + ") where user_name = " + userName + ";";
             statement.executeUpdate(insertUserSQL);
             statement.executeUpdate(insertAccountSQL);
             statement.executeUpdate(insertSecuritySQL);

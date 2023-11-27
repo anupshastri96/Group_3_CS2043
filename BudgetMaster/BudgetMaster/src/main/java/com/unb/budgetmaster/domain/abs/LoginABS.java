@@ -6,8 +6,8 @@ public interface LoginABS {
     Boolean checkLoginInfo(String username, String password);
     Boolean checkSignUpInfo(String firstname, String lastname, String username, String password);
     Boolean confirmPassword(String pass, String confirmPass);
-    void setSecurityQuestions(String answer1, String answer2);
-    Boolean checkSecurityQuestions(String answer1, String answer2);
+    void setSecurityQuestions(String answer1, String answer2, String username);
+    Boolean checkSecurityQuestions(String answer1, String answer2, String username);
     Boolean doesUsernameExists(String username);
     void createUser(User user);
 }

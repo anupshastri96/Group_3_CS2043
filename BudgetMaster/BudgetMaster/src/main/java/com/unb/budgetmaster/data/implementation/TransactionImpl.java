@@ -20,7 +20,7 @@ public class TransactionImpl implements TransactionABS{
     Connection connection = data.connectDatabase();
 
     @Override
-    public Transaction getTransactionDetail(int id) {
+    public Transaction getTransactionDetail(int id, String username) {
         Transaction transactionDetails;
         String transactionType = "";
         double transactionAmount = 0;
@@ -29,8 +29,8 @@ public class TransactionImpl implements TransactionABS{
         String payee = "";
 
         try{
-            String transactionQuery = "select transaction_name, transaction_amount, category_name, date_format(transaction_date, '%d-%m-%Y'), transaction_payee from transaction_data natural join category_data natural join transaction_type where transaction_id =" + id +
-            "order by transaction_date asc;"; 
+            String transactionQuery = "select transaction_name, transaction_amount, category_name, date_format(transaction_date, '%d-%m-%Y'), transaction_payee from transaction_data natural join category_data natural join transaction_type where transaction_id = " + id +
+            " and where user_name = " + username + "order by transaction_date asc;"; 
             PreparedStatement preparedStatement = connection.prepareStatement(transactionQuery);
             ResultSet results = preparedStatement.executeQuery();
 
@@ -50,7 +50,7 @@ public class TransactionImpl implements TransactionABS{
     }
 
     @Override
-    public void setTransactionDetails(Transaction transaction) {
+    public void setTransactionDetails(Transaction transaction, String username) {
         try{
             Statement statement = connection.createStatement();
             int transactionID = transaction.getID();
@@ -63,7 +63,7 @@ public class TransactionImpl implements TransactionABS{
             + ", transaction_amount = " + transactionAmount
             + ", transaction_type = " + transactionType
             + ", category_name = " + categoryType 
-            + ", transaction_payee = " + payee + " where transaction_id = " + transactionID + ";";
+            + ", transaction_payee = " + payee + " where transaction_id = " + transactionID + "and user_name = " + username + ";";
           
             statement.executeUpdate(changeTransaction);
         }
@@ -74,7 +74,7 @@ public class TransactionImpl implements TransactionABS{
     }
 
     @Override
-    public void addTransaction(String date, int id, double amount, String type, String category) {
+    public void addTransaction(String date, int id, double amount, String type, String category, String username) {
         try{
             Statement statement = connection.createStatement();
             String transactionDate  = date;
@@ -82,7 +82,7 @@ public class TransactionImpl implements TransactionABS{
             double transactionAmount = amount;
             String transactionType = type;
             String categoryType = category;
-            String insertTransaction = "insert into transaction_data(transaction_date, transaction_id, transaction_amount, transaction_type) values(" + transactionDate + "," + transactionID + "," + transactionAmount + "," + transactionType + "," + categoryType + ");";
+            String insertTransaction = "insert into transaction_data(transaction_date, transaction_id, transaction_amount, transaction_type) values(" + transactionDate + "," + transactionID + "," + transactionAmount + "," + transactionType + "," + categoryType + " where user_name = " + username + ");";
             statement.executeUpdate(insertTransaction);
         }
         catch(SQLException e){
@@ -92,11 +92,11 @@ public class TransactionImpl implements TransactionABS{
     }
 
     @Override
-    public void deleteTransaction(Transaction transaction) {
+    public void deleteTransaction(Transaction transaction, String username) {
         int transactionID = transaction.getID();
         try{
             Statement statement = connection.createStatement();
-            String deleteTransaction = "delete from transaction_data where " + transactionID + ";";
+            String deleteTransaction = "delete from transaction_data where " + transactionID + " and user_name = " + username + ";";
             statement.executeUpdate(deleteTransaction);
         }
          catch(SQLException e){
@@ -105,7 +105,7 @@ public class TransactionImpl implements TransactionABS{
     }
 
     @Override
-    public ArrayList<Transaction> getTransactions(String type, Category category, String sort) {
+    public ArrayList<Transaction> getTransactions(String type, Category category, String sort, String username) {
         ArrayList<Transaction> allTransactions = new ArrayList<Transaction>();
         Transaction transaction;
         int transactionID = 0;
@@ -116,7 +116,7 @@ public class TransactionImpl implements TransactionABS{
         String payee = "";
 
         try{
-            String transactionQuery = "select transaction_id, transaction_name, transaction_amount, category_name, date_format(transaction_date, '%d-%m-%Y'), transaction_payee from transaction_data natural join category_data natural join transaction_type order by transaction_date asc;"; 
+            String transactionQuery = "select transaction_id, transaction_name, transaction_amount, category_name, date_format(transaction_date, '%d-%m-%Y'), transaction_payee from transaction_data natural join category_data natural join transaction_type where user_name = " + username + "order by transaction_date asc;"; 
             
             PreparedStatement preparedStatement = connection.prepareStatement(transactionQuery);
             ResultSet results = preparedStatement.executeQuery();
