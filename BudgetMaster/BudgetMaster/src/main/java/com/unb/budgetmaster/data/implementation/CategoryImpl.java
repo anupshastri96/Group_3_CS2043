@@ -43,7 +43,7 @@ public class CategoryImpl implements CategoryABS{
                 else if(type.equals("Spendings")){
                     budget = results.getDouble("spendings_per_category");
                 }
-                //category = new Category(categoryName, budget, categoryID)
+                category = new Category(categoryName, budget, type);
                
             }
         }

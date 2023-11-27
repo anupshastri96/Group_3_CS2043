@@ -16,38 +16,47 @@ public class AnalysisImpl implements AnalysisABS{
 
     @Override
     public double getTotalSpent(String username) {
+        double total = 0;
         try{
-            String totalSpentQuery = "select spendings_overall_total from transaction_data where user_name = " ;
+            String totalSpentQuery = "select spendings_overall_total from transaction_data where user_name = " + username + ";";
+            PreparedStatement statement = connection.prepareStatement(totalSpentQuery);
+            ResultSet results = statement.executeQuery(); 
+            if(results.next()){
+                total = results.getDouble("spendings_overall_total");
+            }
         }
+        catch(SQLException e){
+            e.printStackTrace();
+        }
+        return total;
+    }
+
+    @Override
+    public double getTotalSaved(String username) {
         return 0;
     }
 
     @Override
-    public double getTotalSaved() {
+    public double getTotalSpent(String date1, String date2, String username) {
         return 0;
     }
 
     @Override
-    public double getTotalSpent(String date1, String date2) {
+    public double getTotalSaved(String date1, String date2, String username) {
         return 0;
     }
 
     @Override
-    public double getTotalSaved(String date1, String date2) {
-        return 0;
-    }
-
-    @Override
-    public double getUsualSpent() {
+    public double getUsualSpent(String username) {
         return 0;
     }
     @Override
-    public double getUsualSpent(String date1, String date2) {
+    public double getUsualSpent(String date1, String date2, String username) {
      return 0;
     }
 
     @Override
-    public double getBalance() {
+    public double getBalance(String username) {
         return 0;
     }
     
