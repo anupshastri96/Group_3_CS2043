@@ -19,10 +19,10 @@ public class AnalysisImpl implements AnalysisABS{
     Connection connection = data.getDatabase();
 
     @Override
-    public double getTotalSpent(String username) {
+    public double getTotalSpent() {
         double total = 0;
         try{
-            String totalSpentQuery = "select transaction_amount from transaction_data where transaction_type = 'Spendings' and user_name = " + username  + ";";
+            String totalSpentQuery = "select transaction_amount from transaction_data where transaction_type = 'Spendings' and user_name = " + Database.user.getUsername()  + ";";
             PreparedStatement statement = connection.prepareStatement(totalSpentQuery);
             ResultSet results = statement.executeQuery();
             if(results.next()){
@@ -36,10 +36,10 @@ public class AnalysisImpl implements AnalysisABS{
     }
 
     @Override
-    public double getTotalSaved(String username) {
+    public double getTotalSaved() {
         double total = 0;
         try{
-            String totalSavedQuery = "select transaction_amount from transaction_data where transaction_type = 'Savings' and user_name = " + username + ";";
+            String totalSavedQuery = "select transaction_amount from transaction_data where transaction_type = 'Savings' and user_name = " + Database.user.getUsername() + ";";
             PreparedStatement statement = connection.prepareStatement(totalSavedQuery);
             ResultSet results = statement.executeQuery();
             if(results.next()){
@@ -53,12 +53,12 @@ public class AnalysisImpl implements AnalysisABS{
     }
 
     @Override
-    public double getTotalSpent(LocalDate date1, LocalDate date2, String username) {
+    public double getTotalSpent(LocalDate date1, LocalDate date2) {
         double total = 0;
         Date d1 = Date.valueOf(date1);
         Date d2 = Date.valueOf(date2);
         try{
-            String queryTotalSpent = "select transaction_amount from transaction_data where transaction_date >= '" + d1 + "' and transaction_date <= '" + d2 + "' and transaction_type = 'Spendings' and user_name = " + username + ";";
+            String queryTotalSpent = "select transaction_amount from transaction_data where transaction_date >= '" + d1 + "' and transaction_date <= '" + d2 + "' and transaction_type = 'Spendings' and user_name = " + Database.user.getUsername() + ";";
             PreparedStatement statement = connection.prepareStatement(queryTotalSpent);
             ResultSet results = statement.executeQuery();
             if(results.next()){
@@ -72,12 +72,12 @@ public class AnalysisImpl implements AnalysisABS{
     }
 
     @Override
-    public double getTotalSaved(LocalDate date1, LocalDate date2, String username) {
+    public double getTotalSaved(LocalDate date1, LocalDate date2) {
         double total = 0;
         Date d1 = Date.valueOf(date1);
         Date d2 = Date.valueOf(date2);
         try{
-            String queryTotalSaved = "select transaction_amount from transaction_data where transaction_date >= '" + d1 + "' and transaction_date <= '" + d2 + "' and transaction_type = 'Savings' and user_name = " + username + ";";
+            String queryTotalSaved = "select transaction_amount from transaction_data where transaction_date >= '" + d1 + "' and transaction_date <= '" + d2 + "' and transaction_type = 'Savings' and user_name = " + Database.user.getUsername() + ";";
             PreparedStatement statement = connection.prepareStatement(queryTotalSaved);
             ResultSet results = statement.executeQuery();
             if(results.next()){
@@ -91,25 +91,25 @@ public class AnalysisImpl implements AnalysisABS{
     }
 
     @Override
-    public double getUsualSpent(String username) {
+    public double getUsualSpent() {
         int lengthOfMonth = date.lengthOfMonth();
-        double totalAmountSpent = this.getTotalSpent(username);
+        double totalAmountSpent = this.getTotalSpent();
         double total = totalAmountSpent/lengthOfMonth;
 
         return total;
     }
+   
     @Override
-    public double getUsualSpent(LocalDate date1, LocalDate date2, String username) {
+    public double getUsualSpent(LocalDate date1, LocalDate date2) {
         int lengthOfMonth = date.lengthOfMonth();
-        double totalAmountSpent = this.getTotalSpent(date1, date2, username);
+        double totalAmountSpent = this.getTotalSpent(date1, date2);
         double total = totalAmountSpent/lengthOfMonth;
         return total;
     }
 
     @Override
-    public double getBalance(String username) {
-        double total = this.getTotalSpent(username) - this.getTotalSaved(username);
+    public double getBalance() {
+        double total = this.getTotalSpent() - this.getTotalSaved();
         return total;
     }
-    
 }
