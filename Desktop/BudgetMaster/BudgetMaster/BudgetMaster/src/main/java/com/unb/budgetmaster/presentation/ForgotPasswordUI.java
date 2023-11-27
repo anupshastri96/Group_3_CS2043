@@ -5,12 +5,11 @@ import java.util.ArrayList;
 import com.unb.budgetmaster.data.implementation.Database;
 import com.unb.budgetmaster.data.implementation.LoginImpl;
 import com.unb.budgetmaster.domain.model.User;
-import com.unb.budgetmaster.presentation.LoginUI;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
-import javafx.scene.layout.Pane;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.control.TextField;
 import javafx.geometry.Pos;
@@ -20,13 +19,13 @@ import javafx.scene.control.Label;
 public class ForgotPasswordUI {
     // Implementation Instances
     private LoginImpl loginImpl;
-    
+
     // UI Instances
     private LoginUI loginUI;
 
     private Label notConfirmed;
 
-    public void getContent(Pane root, String username) {
+    public void getContent(BorderPane root, String username) {
         // Instantiate implementation
         loginImpl = new LoginImpl();
 
@@ -64,14 +63,15 @@ public class ForgotPasswordUI {
 
         root.getChildren().clear();
         root.getChildren().add(topPane);
+        return;
     }
 
-    private void switchToLogin(Pane root) {
+    private void switchToLogin(BorderPane root) {
         loginUI.getLoginUI(root);
         return;
     }
 
-    private void switchToMenu(Pane root, String password, String confirmPass) {
+    private void switchToMenu(BorderPane root, String password, String confirmPass) {
         // Verify that our Password and Confirm Password fields match
         if(!loginImpl.confirmPassword(password, confirmPass)) {
             notConfirmed.setText("Passwords do not match");
@@ -82,5 +82,6 @@ public class ForgotPasswordUI {
 
         // Go to login page
         switchToLogin(root);
+        return;
     }
 }

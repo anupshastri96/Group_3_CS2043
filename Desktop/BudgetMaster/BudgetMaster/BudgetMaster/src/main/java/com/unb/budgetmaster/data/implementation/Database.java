@@ -20,10 +20,6 @@ public class Database {
         return con;
     }
 
-    public static User getUser(String username){
-        return user;
-    }
-
     public static void disconnectDatabase() {
         try {
             con.close();

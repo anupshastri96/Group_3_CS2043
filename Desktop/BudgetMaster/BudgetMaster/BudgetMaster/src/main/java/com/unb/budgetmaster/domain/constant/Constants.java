@@ -5,5 +5,5 @@ public class Constants {
     public static String IP = "";
     public static String URL = "jdbc:mysql://localhost:3306/budgetmaster?autoReconnect=true&useSSL=false";
     public  static final String USER = "root";
-    public static final String PASSWORD = "budgetMaster1234!";
+    public static final String PASSWORD = "DesolatedT1tan";
 }

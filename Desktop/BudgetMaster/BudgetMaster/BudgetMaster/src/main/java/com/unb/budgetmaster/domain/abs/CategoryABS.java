@@ -7,5 +7,7 @@ public interface CategoryABS {
     ArrayList<Category> getCategories(String type);
     void addCategory(Category category);
     void deleteCategory(Category category);
+
+    Boolean checkCategoryExists(String category);
     
 }

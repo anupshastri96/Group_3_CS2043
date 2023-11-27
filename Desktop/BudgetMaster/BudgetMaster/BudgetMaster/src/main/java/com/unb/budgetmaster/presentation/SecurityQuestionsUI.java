@@ -7,8 +7,8 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.control.TextField;
 import javafx.geometry.Pos;
@@ -27,17 +27,17 @@ public class SecurityQuestionsUI {
 
     // Security Questions Array
     private final String[] securityQuestionsArray = {
-        "Question 1: What is your favorite childhood pet's name",
-        "Question 2: In which city were you born?",
-        "Question 3: What is your mother's maiden name?",
-        "Question 4: What is the name of your favorite teacher in high school?",
-        "Question 5: What is the model of your favourite car?"
+            "Question 1: What is your favorite childhood pet's name",
+            "Question 2: In which city were you born?",
+            "Question 3: What is your mother's maiden name?",
+            "Question 4: What is the name of your favorite teacher in high school?",
+            "Question 5: What is the model of your favourite car?"
     };
 
-    public void getContent(Pane root, Boolean isNewUser) {
+    public void getContent(BorderPane root, Boolean isNewUser) {
         // Instantiate implementations
         loginImpl = new LoginImpl();
-        
+
         //Instantiate UI instances
         signUpUI = new SignUpUI();
         loginUI = new LoginUI();
@@ -115,7 +115,7 @@ public class SecurityQuestionsUI {
         return;
     }
 
-    private void backEvent(Pane root, Boolean isNewUser) {
+    private void backEvent(BorderPane root, Boolean isNewUser) {
         if(isNewUser) {
             // Switch the content displayed in root to Sign Up
             signUpUI.getContent(root);
@@ -127,10 +127,10 @@ public class SecurityQuestionsUI {
         return;
     }
 
-    private void submitEvent(Pane root, Boolean isNewUser, String question1, String answer1, String question2, String answer2, Text incorrectText) {
+    private void submitEvent(BorderPane root, Boolean isNewUser, String question1, String answer1, String question2, String answer2, Text incorrectText) {
         // Get our username from the login information given
         String username = Database.user.getUsername();
-        
+
         // Check if an answer was given for the first security question
         if(answer1.equals("")) {
             incorrectText.setText("Please input an answer for the first security question");
@@ -141,7 +141,7 @@ public class SecurityQuestionsUI {
             incorrectText.setText("Please input an answer for the second security question");
             return;
         }
-        
+
         // Check if we are submitting as a new user
         if(isNewUser) {
             // Check if both security questions are different

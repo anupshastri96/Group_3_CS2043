@@ -1,7 +1,5 @@
 package com.unb.budgetmaster.presentation;
 
-import java.util.ArrayList;
-
 import com.unb.budgetmaster.data.implementation.Database;
 import com.unb.budgetmaster.data.implementation.LoginImpl;
 import com.unb.budgetmaster.domain.model.User;
@@ -15,7 +13,7 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.geometry.Pos;
 import javafx.scene.layout.VBox;
-import javafx.scene.layout.Pane;
+import javafx.scene.layout.BorderPane;
 
 public class SignUpUI {
     // Declare label for enter details
@@ -26,14 +24,14 @@ public class SignUpUI {
 
     // UI Instances
     private SecurityQuestionsUI securityQuestionsUI; // Change name of class to match this
- 
-    public void getContent(Pane root){
+
+    public void getContent(BorderPane root){
         // Instantiate Implementation
         loginImpl = new LoginImpl();
 
         // UI Implementation
         securityQuestionsUI = new SecurityQuestionsUI();
-        
+
         // Create text for title
         Text title = new Text("Budget Master");
         title.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.REGULAR, 40));
@@ -78,7 +76,7 @@ public class SignUpUI {
         // Create button to submit information
         Button submit = new Button("Submit");
         submit.setOnAction(event -> confirmSignUp(firstName_tf.getText(), middleName_tf.getText(), lastName_tf.getText(), userName_tf.getText(), passWord_tf.getText(), confirmPass_tf.getText(), root));
-        
+
         // Create VBox to contain all fields
         VBox topPane = new VBox(10.0);
         topPane.setAlignment(Pos.CENTER);
@@ -86,10 +84,10 @@ public class SignUpUI {
 
         // Set the root Pane to the Sign Up UI
         root.getChildren().clear();
-        root.getChildren().add(topPane);
+        root.setCenter(topPane);
     }
 
-    private void confirmSignUp(String firstname, String middlename, String lastname, String username, String password, String confirmPassword, Pane root) {
+    private void confirmSignUp(String firstname, String middlename, String lastname, String username, String password, String confirmPassword, BorderPane root) {
         // Check if First Name field isn't blank
         if(firstname.equals("")) {
             enterDetail_lb.setText("Please enter a First Name");
@@ -113,7 +111,7 @@ public class SignUpUI {
             enterDetail_lb.setText("Please enter a Password");
             return;
         }
-        
+
         // Check if Confirm Password field isn't blank
         if(confirmPassword.equals("")) {
             enterDetail_lb.setText("Please confirm your password");
@@ -125,7 +123,7 @@ public class SignUpUI {
             enterDetail_lb.setText("Username already taken/Invalid username");
             return;
         }
-        
+
         // Verify that our Password and Confirm Password fields match
         if(!loginImpl.confirmPassword(password, confirmPassword)) {
             enterDetail_lb.setText("Passwords do not match");

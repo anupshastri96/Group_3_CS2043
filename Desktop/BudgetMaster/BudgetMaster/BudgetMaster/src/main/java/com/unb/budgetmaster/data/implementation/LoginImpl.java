@@ -1,6 +1,8 @@
 package com.unb.budgetmaster.data.implementation;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
@@ -8,37 +10,99 @@ import com.unb.budgetmaster.domain.abs.LoginABS;
 import com.unb.budgetmaster.domain.model.User;
 
 public class LoginImpl implements LoginABS {
-
+    Connection connection = Database.getDatabase();
     @Override
     public Boolean checkLoginInfo(String username, String password) {
-        return null;
-    }
+        String userName = "";
+        String passWord = "";
+        boolean success = false;
 
+        try{
+            String getLoginInfo = "select user_name, user_password from user_data where user_name = " + username + ";";
+            PreparedStatement preparedStatement = connection.prepareStatement(getLoginInfo);
+            ResultSet results = preparedStatement.executeQuery();
+
+            if(results.next()){
+                userName = results.getString("user_name");
+                passWord = results.getString("user_password");
+            }
+            if(userName.equals(username) && passWord.equals(password)){
+                success = true;
+            }
+        }
+        catch(SQLException e){
+            e.printStackTrace();
+        }
+        return success;
+    }
 
     @Override
     public Boolean confirmPassword(String pass, String confirmPass) {
-        return null;
+        return pass.equals(confirmPass);
     }
 
     @Override
     public void setSecurityQuestions(String answer1, String answer2) {
+        try{
+            Statement statement = connection.createStatement();
+            String insertSecurityQuestions = "insert into security_data(account_answer1, account_answer2) values(" + answer1 + ", " + answer2 + " where user_name = " + Database.user.getUsername() + ")";
+            statement.executeQuery(insertSecurityQuestions);
+        }
+        catch(SQLException e){
+            e.printStackTrace();
+        }
     }
 
-
-
     @Override
-    public Boolean checkSecurityQuestions(String username,String answer1, String answer2) {
-        return null;
+    public Boolean checkSecurityQuestions(String answer1, String answer2, String username) {
+        String a1 = "";
+        String a2 = "";
+        boolean success = false;
+
+        try{
+            String getAnswers = "select account_answer1, account_answer2 from security_data where username = " + username + ";";
+            PreparedStatement statement = connection.prepareStatement(getAnswers);
+            ResultSet results = statement.executeQuery();
+
+            if(results.next()){
+                a1 = results.getString("account_answer1");
+                a2 = results.getString("account_answer2");
+            }
+            if(a1.equals(answer1) && a2.equals(answer2)){
+                success = true;
+            }
+        }
+        catch(SQLException e){
+            e.printStackTrace();
+        }
+        return success;
     }
 
     @Override
     public Boolean doesUsernameExists(String username) {
-        return null;
+        String userName = "";
+        boolean success = false;
+        try{
+            String getUserName = "select user_name from user_data;";
+            PreparedStatement statement = connection.prepareStatement(getUserName);
+            ResultSet results = statement.executeQuery();
+
+            while(results.next()){
+                userName = results.getString("user_name");
+                if(username.equals(userName)){
+                    success = true;
+                }
+            }
+        }
+        catch(SQLException e){
+            e.printStackTrace();
+        }
+        return success;
     }
 
     @Override
     public void createUser(User user) {
-        
+
         String name = user.getFirstName();
         String middleName = user.getMiddleName();
         String lastName = user.getLastName();
@@ -50,13 +114,13 @@ public class LoginImpl implements LoginABS {
         String a2 = user.getSecQ2Answer();
 
         try{
-            Statement statement = Database.getDatabase().createStatement();
+            Statement statement = connection.createStatement();
             //Inserts username and password into user_data table
             String insertUserSQL = "insert into user_data values(" + userName + "," + passWord + ");";
             //Inserts name, middle name, and last name into account_data table
-            String insertAccountSQL = "insert into account_data values(" + name + "," + middleName + "," + lastName + ");";
+            String insertAccountSQL = "insert into account_data values(" + name + "," + middleName + "," + lastName + ") where user_name = " + userName + ";";
             //Inserts security question 1, question 2, answer 1, and answer 2 into security_data table
-            String insertSecuritySQL = "insert into security_data values(" + q1 + "," + a1 + "," + q2 + "," + a2 + ");";
+            String insertSecuritySQL = "insert into security_data values(" + q1 + "," + a1 + "," + q2 + "," + a2 + ") where user_name = " + userName + ";";
             statement.executeUpdate(insertUserSQL);
             statement.executeUpdate(insertAccountSQL);
             statement.executeUpdate(insertSecuritySQL);
@@ -64,7 +128,7 @@ public class LoginImpl implements LoginABS {
         catch(SQLException e){
             e.printStackTrace();
         }
-       
+
     }
 
     @Override
