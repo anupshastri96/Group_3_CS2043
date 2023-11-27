@@ -4,6 +4,8 @@ import java.util.ArrayList;
 
 import com.unb.budgetmaster.data.implementation.Database;
 import com.unb.budgetmaster.data.implementation.LoginImpl;
+import com.unb.budgetmaster.domain.model.User;
+
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.Scene;
@@ -19,8 +21,8 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture; 
 import javafx.scene.layout.VBox;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Pane;
-
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.BorderPane;
 
 public class LoginUI {
 
@@ -35,7 +37,10 @@ public class LoginUI {
     // Store username
     private String username;
 
-    public void getLoginUI(Pane root){
+    // Login Information
+    ArrayList<String> loginInformation = new ArrayList<String>();
+
+    public void getLoginUI(BorderPane root){
         // Instantiate implementations
         loginImpl = new LoginImpl();
 
@@ -71,28 +76,38 @@ public class LoginUI {
 
         // Create button for Forgot Password
         Button forgotPasswordButton = new Button("Forgot Password");
-        forgotPasswordButton.setOnAction(event -> switchToFP(root));
+        forgotPasswordButton.setOnAction(event -> switchToSecurityQuestions(root));
+
+        HBox buttonBox = new HBox(10);
+        buttonBox.getChildren().addAll(createAccountButton, forgotPasswordButton);
+        buttonBox.setAlignment(Pos.CENTER);
 
         // Create button to submit login information
         Button submit = new Button("Submit");
         submit.setOnAction(event -> verifyLogin(userName_tf.getText(), passWord_tf.getText(), root, loginSuccess));
         
+        // DELETE THIS
+        Button temporary = new Button("Temporary");
+        temporary.setOnAction(event -> {
+            Database.user = new User("Alex", "middlename", "Boudreau", "Username_Here", "Password_Here");
+            menu.getContentMenu(root);
+        });
+
         // Create VBox to contain everything in
-        VBox topPane = new VBox(10.0);
-        topPane.setAlignment(Pos.CENTER);
-        topPane.getChildren().addAll(title, displayLogin, loginSuccess, userName_lb, userName_tf, passWord_lb, passWord_tf, submit);
-        
+        VBox topPane = new VBox(20.0);
+        topPane.setStyle("-fx-alignment: CENTER");
+        topPane.getChildren().addAll(title, displayLogin, loginSuccess, userName_lb, userName_tf, passWord_lb, passWord_tf, submit, buttonBox, temporary);
+
         // Set the root Pane to the Login UI
         root.getChildren().clear();
-        root.getChildren().add(topPane);
+        root.setCenter(topPane);
         return;
     }
 
-    private void verifyLogin(String username, String password, Pane root, Text loginSuccess) {
+    private void verifyLogin(String username, String password, BorderPane root, Text loginSuccess) {
         // Check to make sure our username and password are part of our database
         if(loginImpl.checkLoginInfo(username, password)) {
             // Get login information from username
-            ArrayList<String> loginInformation = new ArrayList<>();
             loginInformation.add(Database.user.getFirstName());
             loginInformation.add(Database.user.getMiddleName());
             loginInformation.add(Database.user.getLastName());
@@ -110,19 +125,19 @@ public class LoginUI {
 
         // If not, tell user that username or password is invalid
         loginSuccess.setText("Invalid username/password");
+        return;
     }
 
-    private void switchToFP(Pane root) {
+    private void switchToSecurityQuestions(BorderPane root) {
         // Open prompt that asks for username
         openUsernameInput();
 
-//        ArrayList<String> loginInformation = Database.user.getUsername();
-
         // Switch the content displayed in root to Security Questions
         securityQuestionsUI.getContent(root, false);
+        return;
     }
 
-    private void switchToSignUp(Pane root) {
+    private void switchToSignUp(BorderPane root) {
         // Switch the content displayed in root to Sign Up
         signUpUI.getContent(root);
         return;
@@ -163,7 +178,7 @@ public class LoginUI {
             return;
         }
 
-        if(!loginImpl.doesUsernameExists(inputUsername)) {
+        if(loginImpl.doesUsernameExists(inputUsername) == false) {
             usernameTextField.clear();
             usernameTextField.setPromptText("Invalid username, please try again");
             return;

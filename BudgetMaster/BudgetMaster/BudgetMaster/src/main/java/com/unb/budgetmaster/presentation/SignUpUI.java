@@ -1,7 +1,5 @@
 package com.unb.budgetmaster.presentation;
 
-import java.util.ArrayList;
-
 import com.unb.budgetmaster.data.implementation.Database;
 import com.unb.budgetmaster.data.implementation.LoginImpl;
 import com.unb.budgetmaster.domain.model.User;
@@ -15,7 +13,7 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.geometry.Pos;
 import javafx.scene.layout.VBox;
-import javafx.scene.layout.Pane;
+import javafx.scene.layout.BorderPane;
 
 public class SignUpUI {
     // Declare label for enter details
@@ -27,7 +25,7 @@ public class SignUpUI {
     // UI Instances
     private SecurityQuestionsUI securityQuestionsUI; // Change name of class to match this
  
-    public void getContent(Pane root){
+    public void getContent(BorderPane root){
         // Instantiate Implementation
         loginImpl = new LoginImpl();
 
@@ -86,10 +84,10 @@ public class SignUpUI {
 
         // Set the root Pane to the Sign Up UI
         root.getChildren().clear();
-        root.getChildren().add(topPane);
+        root.setCenter(topPane);
     }
 
-    private void confirmSignUp(String firstname, String middlename, String lastname, String username, String password, String confirmPassword, Pane root) {
+    private void confirmSignUp(String firstname, String middlename, String lastname, String username, String password, String confirmPassword, BorderPane root) {
         // Check if First Name field isn't blank
         if(firstname.equals("")) {
             enterDetail_lb.setText("Please enter a First Name");

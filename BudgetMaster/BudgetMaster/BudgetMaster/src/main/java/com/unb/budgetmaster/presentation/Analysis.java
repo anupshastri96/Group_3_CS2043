@@ -1,13 +1,16 @@
 package com.unb.budgetmaster.presentation;
 
-
 import com.unb.budgetmaster.data.implementation.AnalysisImpl;
 import com.unb.budgetmaster.data.implementation.CategoryImpl;
 import com.unb.budgetmaster.data.implementation.Database;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontPosture;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -33,13 +36,19 @@ public class Analysis {
     private Label remainingBudgetLabel;
     private Label remainingAmountLabel;
     private Label savedAmountLabel;
+    private Label typicalSpendingLabel;
+    private Label typicalSavingsLabel;
 
 
     // Implementation Instances
     private AnalysisImpl analysisImpl;
     private CategoryImpl categoryImpl;
 
-    public void getContent(Label contentLabel, Pane root) {
+    // UI Elements
+    private HBox buttonsBox;
+    private VBox categoriesContainer;
+
+    public void getContent(Label contentLabel, VBox contentContainer) {
         analysisImpl = new AnalysisImpl();
         categoryImpl = new CategoryImpl();
 
@@ -65,36 +74,40 @@ public class Analysis {
 
         // Create labels for the above texts
         remainingBudgetLabel = new Label(remainingBudgetText);
+        remainingBudgetLabel.setFont(Font.font("verdana", FontPosture.REGULAR, 18));
         remainingAmountLabel = new Label(remainingAmountText);
+        remainingAmountLabel.setFont(Font.font("verdana", FontPosture.REGULAR, 18));
         savedAmountLabel = new Label(savedAmountText);
-        Label typicalSpendingLabel = new Label(typicalSpendingText);
-        Label typicalSavingsLabel = new Label(typicalSavingsText);
-
-        // Left align the labels
-        remainingBudgetLabel.setStyle("-fx-alignment: LEFT;");
-        remainingAmountLabel.setStyle("-fx-alignment: LEFT;");
-        savedAmountLabel.setStyle("-fx-alignment: LEFT;");
-        typicalSpendingLabel.setStyle("-fx-alignment: LEFT;");
-        typicalSavingsLabel.setStyle("-fx-alignment: LEFT;");
+        savedAmountLabel.setFont(Font.font("verdana", FontPosture.REGULAR, 18));
+        typicalSpendingLabel = new Label(typicalSpendingText);
+        typicalSpendingLabel.setFont(Font.font("verdana", FontPosture.REGULAR, 18));
+        typicalSavingsLabel = new Label(typicalSavingsText);
+        typicalSavingsLabel.setFont(Font.font("verdana", FontPosture.REGULAR, 18));
 
         // Create "Analyze through dates" button
         Button analyzeThroughDatesButton = new Button("Analyze through dates");
         analyzeThroughDatesButton.setOnAction(event -> showDateAnalysisPopup());
+        analyzeThroughDatesButton.setAlignment(Pos.BOTTOM_LEFT);
 
         // Create "Analyze through Categories" button
         Button analyzeThroughCategoriesButton = new Button("Analyze through Categories");
-        analyzeThroughCategoriesButton.setOnAction(event -> showCategoryAnalysis(root, contentLabel));
+        analyzeThroughCategoriesButton.setOnAction(event -> showCategoryAnalysis(contentContainer, contentLabel));
+        analyzeThroughCategoriesButton.setAlignment(Pos.BOTTOM_RIGHT);
+
+        HBox buttonBox = new HBox(20);
+        buttonBox.getChildren().addAll(analyzeThroughDatesButton, analyzeThroughCategoriesButton);
+        buttonBox.setAlignment(Pos.BOTTOM_CENTER);
 
         // Add components to contentContainer
-        root.getChildren().addAll(
+        contentContainer.getChildren().addAll(
                 remainingBudgetLabel,
                 remainingAmountLabel,
                 savedAmountLabel,
                 typicalSpendingLabel,
                 typicalSavingsLabel,
-                analyzeThroughDatesButton,
-                analyzeThroughCategoriesButton
+                buttonBox
         );
+        contentContainer.setSpacing(40);
     }
 
     private void showDateAnalysisPopup() {
@@ -131,6 +144,10 @@ public class Analysis {
                     endDayField.getText(), endMonthField.getText(), endYearField.getText());
             popupStage.close();
         });
+
+        HBox analyzeButtonBox = new HBox(10, analyzeButton);
+        analyzeButtonBox.setAlignment(Pos.CENTER);
+        analyzeButtonBox.setPadding(new Insets(15));
 
         // Create layout for the popup
         VBox popupLayout = new VBox(10);
@@ -184,11 +201,12 @@ public class Analysis {
         remainingBudgetLabel.setText(newRemainingBudgetText);
         remainingAmountLabel.setText("");
         savedAmountLabel.setText(newSavedAmountText);
+        return;
     }
 
-    private void showCategoryAnalysis(Pane root, Label contentLabel) {
+    private void showCategoryAnalysis(VBox contentContainer, Label contentLabel) {
         // Clear content
-        clearContent(root);
+        clearContent(contentContainer);
 
         // Change contentLabel
         contentLabel.setText("Category Analysis");
@@ -207,10 +225,10 @@ public class Analysis {
         HBox headerRow = new HBox(10, categoryLabel, percentageLabel, amountPaidLabel);
 
         // Add header row to contentContainer
-        root.getChildren().add(headerRow);
+        contentContainer.getChildren().add(headerRow);
 
         // Display categories
-        VBox categoriesContainer = new VBox(10);
+        categoriesContainer = new VBox(10);
         updateCategories(categoriesContainer);
 
         // Create "Analyze through Categories" buttons
@@ -244,7 +262,7 @@ public class Analysis {
             updateCategories(categoriesContainer);
         });
 
-        returnToMonthlyAnalysisButton.setOnAction(event -> getContent(contentLabel, root));
+        returnToMonthlyAnalysisButton.setOnAction(event -> getContent(contentLabel, contentContainer));
 
         analyzeCategoriesThroughDatesButton.setOnAction(event -> showDateAnalysisPopup());
 
@@ -252,7 +270,7 @@ public class Analysis {
         updateCategoryButtonVisibility();
 
         // Create HBox for buttons
-        HBox buttonsBox = new HBox(10,
+        buttonsBox = new HBox(10,
                 previousCategoriesButton,
                 nextCategoriesButton,
                 switchAnalysisTypeButton,
@@ -263,7 +281,7 @@ public class Analysis {
         buttonsBox.setStyle("-fx-alignment: CENTER_LEFT;");
 
         // Add components to contentContainer
-        root.getChildren().addAll(categoriesContainer, buttonsBox);
+        contentContainer.getChildren().addAll(categoriesContainer, buttonsBox);
     }
 
     private void updateCategories(VBox categoriesContainer) {
@@ -271,9 +289,9 @@ public class Analysis {
 
         // Get categories from the provider
         ArrayList<String> categories = new ArrayList<String>();
-        int totalCategories = categoryImpl.getCategories( currentAnalysisType).size();
+        int totalCategories = categoryImpl.getCategories(currentAnalysisType).size();
         for(int i = 0; i < totalCategories; i++) {
-            categories.add(categoryImpl.getCategories( currentAnalysisType).get(i).getName());
+            categories.add(categoryImpl.getCategories(currentAnalysisType).get(i).getName());
         }
 
         // Display categories based on the current categoryStartIndex
@@ -309,10 +327,12 @@ public class Analysis {
     }
 
     private void updateCategoryButtonVisibility() {
-
+        if(buttonsBox != null) {
+            buttonsBox.setVisible(true);
+        }
     }
 
-    private void clearContent(Pane root) {
-        root.getChildren().clear();
+    private void clearContent(VBox contentContainer) {
+        contentContainer.getChildren().clear();
     }
 }

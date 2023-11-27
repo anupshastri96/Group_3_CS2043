@@ -1,12 +1,11 @@
 package com.unb.budgetmaster.presentation;
 
-import java.util.ArrayList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 
 public class Menu {
@@ -15,17 +14,24 @@ public class Menu {
     private Button selectedButton; // Track the currently selected button
 
     // Menu Sections
-    //private Analysis analysis; //ADD THIS IN
+    private Spending spending;
+    private Savings savings;
+    private Analysis analysis;
     private History history;
 
     // UI Elements
     private Label titleLabel;
     private Label contentLabel;
     private VBox contentContainer;
+    private VBox contentArea;
+    private VBox contentLabelBox;
+    private VBox menuBar;
 
-    public void getContentMenu(Pane root) {
+    public void getContentMenu(BorderPane root) {
         // Initialize our Menu classes
-        //analysis = new Analysis(); // ADD THIS IN
+        spending = new Spending();
+        savings = new Savings();
+        analysis = new Analysis();
         history = new History();
 
         // Initialize Menu UI components
@@ -40,7 +46,7 @@ public class Menu {
         setButtonSelected(historyButton);
 
         root.getChildren().clear();
-        root.getChildren().add(mainPane);
+        root.setCenter(mainPane);
     }
 
     private void initializeUI() {
@@ -48,16 +54,17 @@ public class Menu {
         titleLabel.setStyle("-fx-font-weight: bold");
         titleLabel.setStyle("-fx-font-size: 30");
 
-        Label contentLabel = new Label("Current Balance: "); // Default content label
+        contentLabel = new Label("Current Balance: "); // Default content label
         contentLabel.setStyle("-fx-font-weight: bold");
         contentLabel.setStyle("-fx-font-size: 24");
 
-        VBox contentContainer = new VBox(10);
+        contentContainer = new VBox(10);
         contentContainer.setPadding(new Insets(10));
+        contentContainer.getChildren().add(contentLabel);
     }
 
     private VBox createMenuBar() {
-        VBox menuBar = new VBox(10);
+        menuBar = new VBox(10);
         menuBar.setPadding(new Insets(10));
         menuBar.setStyle("-fx-background-color: #e0e0e0");
         menuBar.setAlignment(Pos.TOP_CENTER);
@@ -66,7 +73,7 @@ public class Menu {
         Button spendingsButton = createMenuButton("Spendings");
         Button savingsButton = createMenuButton("Savings");
         Button analysisButton = createMenuButton("Analysis");
-        historyButton = createMenuButton("History"); // Store the historyButton as an instance variable since it's default
+        historyButton = createMenuButton("History");
 
         menuBar.getChildren().addAll(titleLabel, spendingsButton, savingsButton, analysisButton, historyButton);
 
@@ -74,8 +81,8 @@ public class Menu {
     }
 
     private VBox createContentArea() {
-        VBox contentArea = new VBox(10);
-        VBox contentLabelBox = new VBox(30);
+        contentArea = new VBox(10);
+        contentLabelBox = new VBox(30);
         contentLabelBox.setPadding(new Insets(30));
         contentLabelBox.setStyle("-fx-border-color: black");
         contentLabelBox.setStyle("-fx-border-style: hidden hidden solid hidden");
@@ -105,11 +112,26 @@ public class Menu {
         // Clear existing content
         contentContainer.getChildren().clear();
 
-        if(menuOption.equals("Analysis")) {
-
+        // Handle the menu button click
+        for (Node node : menuBar.getChildren()) {
+            if (node instanceof Button) {
+                Button button = (Button) node;
+                if (button.getText().equals(menuOption)) {
+                    // Found the clicked button
+                    setButtonSelected(button);
+                    break;
+                }
+            }
         }
 
-        if(menuOption.equals("History")) {
+        // Handle content based on the clicked menu option
+        if (menuOption.equals("Spendings")) {
+            spending.getContent(contentLabel, contentContainer);
+        } else if (menuOption.equals("Savings")) {
+            savings.getContent(contentLabel, contentContainer);
+        } else if (menuOption.equals("Analysis")) {
+            analysis.getContent(contentLabel, contentContainer);
+        } else if (menuOption.equals("History")) {
             history.getContent(contentLabel, contentContainer);
         }
     }
