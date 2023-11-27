@@ -1,6 +1,8 @@
 package com.unb.budgetmaster.data.implementation;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
@@ -14,34 +16,102 @@ public class LoginImpl implements LoginABS {
 
     @Override
     public Boolean checkLoginInfo(String username, String password) {
-        return null;
+        String userName = "";
+        String passWord = "";
+        Boolean success = false;
+
+        try{
+            String getLoginInfo = "select user_name, user_password from user_data where user_name = " + username + ";";
+            PreparedStatement preparedStatement = connection.prepareStatement(getLoginInfo);
+            ResultSet results = preparedStatement.executeQuery();
+
+            if(results.next()){
+                userName = results.getString("user_name");
+                passWord = results.getString("user_password");
+            }
+            if(userName.equals(username) && passWord.equals(password)){
+                success = true;
+            }
+        }
+        catch(SQLException e){
+            e.printStackTrace();
+        }
+        return success;
     }
 
     @Override
     public Boolean checkSignUpInfo(String firstname, String lastname, String username, String password) {
+        
        return null;
     }
 
     @Override
     public Boolean confirmPassword(String pass, String confirmPass) {
-        return null;
+        if(pass.equals(confirmPass)){
+            return true;
+        }
+        else{
+            return false;
+        }
     }
 
     @Override
     public void setSecurityQuestions(String answer1, String answer2) {
+        try{
+            Statement statement = connection.createStatement();
+            String insertSecurityQuestions = "insert into security_data(account_answer1, account_answer2) values(" + answer1 + ", " + answer2 + ")";
+            statement.executeQuery(insertSecurityQuestions);
+        }
+        catch(SQLException e){
+            e.printStackTrace();
+        }
     }
 
     @Override
     public Boolean checkSecurityQuestions(String answer1, String answer2) {
-        return null;
+        String a1 = "";
+        String a2 = "";
+        Boolean success = false;
+
+        try{
+            String getAnswers = "select account_answer1, account_answer2 from security_data;";
+            PreparedStatement statement = connection.prepareStatement(getAnswers);
+            ResultSet results = statement.executeQuery();
+
+            if(results.next()){
+                a1 = results.getString("account_answer1");
+                a2 = results.getString("account_answer2");
+            }
+            if(a1.equals(answer1) && a2.equals(answer2)){
+                success = true;
+            }
+        }
+        catch(SQLException e){
+            e.printStackTrace();
+        }
+        return success;
     }
 
     @Override
     public Boolean doesUsernameExists(String username) {
+        String userName = "";
+        Boolean success = false;
         try{
-            
+            String getUserName = "select user_name from user_data;";
+            PreparedStatement statement = connection.prepareStatement(getUserName);
+            ResultSet results = statement.executeQuery();
+
+            while(results.next()){
+                userName = results.getString("user_name");
+                if(username.equals(userName)){
+                    success = true;
+                }
+            }
         }
-        return null;
+        catch(SQLException e){
+            e.printStackTrace();
+        }
+        return success;
     }
 
     @Override
