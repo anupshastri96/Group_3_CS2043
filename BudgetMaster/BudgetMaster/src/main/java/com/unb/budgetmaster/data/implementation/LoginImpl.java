@@ -36,6 +36,7 @@ public class LoginImpl implements LoginABS {
         return success;
     }
 
+    public User getLoginInfo
     @Override
     public Boolean confirmPassword(String pass, String confirmPass) {
         if(pass.equals(confirmPass)){
