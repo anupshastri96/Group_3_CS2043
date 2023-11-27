@@ -29,7 +29,7 @@ public class TransactionImpl implements TransactionABS{
 
         try{
             String transactionQuery = "select transaction_name, transaction_amount, category_name, date_format(transaction_date, '%d-%m-%Y'), transaction_payee from transaction_data natural join category_data natural join transaction_type where transaction_id = " + id +
-            " and where user_name = " + Database.user.getUsername() + "order by transaction_date asc;"; 
+            " and where user_name = '" + Database.user.getUsername() + "' order by transaction_date asc;"; 
             PreparedStatement preparedStatement = connection.prepareStatement(transactionQuery);
             ResultSet results = preparedStatement.executeQuery();
 
@@ -60,9 +60,9 @@ public class TransactionImpl implements TransactionABS{
             Statement statement = connection.createStatement();
             String changeTransaction = "update transaction_data set transaction_date " + transactionDate
             + ", transaction_amount = " + transactionAmount
-            + ", transaction_type = " + transactionType
-            + ", category_name = " + categoryType 
-            + ", transaction_payee = " + payee + " where transaction_id = " + transactionID + "and user_name = " +  Database.user.getUsername() + ";";
+            + ", transaction_type = '" + transactionType
+            + "', category_name = '" + categoryType 
+            + "', transaction_payee = '" + payee + "' where transaction_id = " + transactionID + "and user_name = '" +  Database.user.getUsername() + "';";
           
             statement.executeUpdate(changeTransaction);
         }
@@ -81,7 +81,7 @@ public class TransactionImpl implements TransactionABS{
             double transactionAmount = amount;
             String transactionType = type;
             String categoryType = category;
-            String insertTransaction = "insert into transaction_data(transaction_date, transaction_id, transaction_amount, transaction_type) values(" + transactionDate + "," + transactionID + "," + transactionAmount + "," + transactionType + "," + categoryType + " where user_name = " + Database.user.getUsername() + ");";
+            String insertTransaction = "insert into transaction_data(transaction_date, transaction_id, transaction_amount, transaction_type) values(" + transactionDate + "," + transactionID + "," + transactionAmount + ", '" + transactionType + "', '" + categoryType + "' where user_name = '" + Database.user.getUsername() + "');";
             statement.executeUpdate(insertTransaction);
         }
         catch(SQLException e){
@@ -95,7 +95,7 @@ public class TransactionImpl implements TransactionABS{
         int transactionID = transaction.getID();
         try{
             Statement statement = connection.createStatement();
-            String deleteTransaction = "delete from transaction_data where " + transactionID + " and user_name = " +  Database.user.getUsername() + ";";
+            String deleteTransaction = "delete from transaction_data where transaction_id = '" + transactionID + "' and user_name = '" +  Database.user.getUsername() + "';";
             statement.executeUpdate(deleteTransaction);
         }
          catch(SQLException e){
@@ -114,7 +114,7 @@ public class TransactionImpl implements TransactionABS{
         String payee = "";
 
         try{
-            String transactionQuery = "select transaction_id, transaction_name, transaction_amount, date_format(transaction_date, '%d-%m-%Y'), transaction_payee from transaction_data natural join category_data natural join transaction_type where user_name = " +  Database.user.getUsername() + " and category_name = '" + categoryName + "' and transaction_type = '" + transactionType + "' order by transaction_date asc;"; 
+            String transactionQuery = "select transaction_id, transaction_name, transaction_amount, date_format(transaction_date, '%d-%m-%Y'), transaction_payee from transaction_data natural join category_data natural join transaction_type where user_name = '" +  Database.user.getUsername() + "' and category_name = '" + categoryName + "' and transaction_type = '" + transactionType + "' order by transaction_date asc;"; 
             
             PreparedStatement preparedStatement = connection.prepareStatement(transactionQuery);
             ResultSet results = preparedStatement.executeQuery();
@@ -145,7 +145,7 @@ public class TransactionImpl implements TransactionABS{
         String payee = "";
 
         try{
-            String transactionQuery = "select transaction_id, transaction_name, transaction_amount, date_format(transaction_date, '%d-%m-%Y'), transaction_payee from transaction_data natural join category_data natural join transaction_type where user_name = " +  Database.user.getUsername() +  "' and transaction_type = '" + transactionType + "' order by transaction_date asc;"; 
+            String transactionQuery = "select transaction_id, transaction_name, transaction_amount, date_format(transaction_date, '%d-%m-%Y'), transaction_payee from transaction_data natural join category_data natural join transaction_type where user_name = '" +  Database.user.getUsername() +  "' and transaction_type = '" + transactionType + "' order by transaction_date asc;"; 
             
             PreparedStatement preparedStatement = connection.prepareStatement(transactionQuery);
             ResultSet results = preparedStatement.executeQuery();
@@ -177,7 +177,7 @@ public class TransactionImpl implements TransactionABS{
         String payee = "";
 
         try{
-            String transactionQuery = "select transaction_id, transaction_type, transaction_name, transaction_amount, date_format(transaction_date, '%d-%m-%Y'), transaction_payee from transaction_data natural join category_data natural join transaction_type where user_name = " +  Database.user.getUsername() +  "' and category_name = '" + categoryName + "' order by transaction_date asc;"; 
+            String transactionQuery = "select transaction_id, transaction_type, transaction_name, transaction_amount, date_format(transaction_date, '%d-%m-%Y'), transaction_payee from transaction_data natural join category_data natural join transaction_type where user_name = '" +  Database.user.getUsername() +  "' and category_name = '" + categoryName + "' order by transaction_date asc;"; 
             
             PreparedStatement preparedStatement = connection.prepareStatement(transactionQuery);
             ResultSet results = preparedStatement.executeQuery();
@@ -209,7 +209,7 @@ public class TransactionImpl implements TransactionABS{
         String payee = "";
 
         try{
-            String transactionQuery = "select transaction_id, transaction_type, transaction_name, transaction_amount, date_format(transaction_date, '%d-%m-%Y'), transaction_payee from transaction_data natural join category_data natural join transaction_type where user_name = " +  Database.user.getUsername() + "' order by transaction_date asc;"; 
+            String transactionQuery = "select transaction_id, transaction_type, transaction_name, transaction_amount, date_format(transaction_date, '%d-%m-%Y'), transaction_payee from transaction_data natural join category_data natural join transaction_type where user_name = '" +  Database.user.getUsername() + "' order by transaction_date asc;"; 
             
             PreparedStatement preparedStatement = connection.prepareStatement(transactionQuery);
             ResultSet results = preparedStatement.executeQuery();

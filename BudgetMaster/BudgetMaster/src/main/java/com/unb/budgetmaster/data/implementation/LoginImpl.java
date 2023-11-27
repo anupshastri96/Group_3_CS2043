@@ -18,7 +18,7 @@ public class LoginImpl implements LoginABS {
         Boolean success = false;
 
         try{
-            String getLoginInfo = "select user_name, user_password from user_data where user_name = " + username + ";";
+            String getLoginInfo = "select user_name, user_password from user_data where user_name = '" + username + "';";
             PreparedStatement preparedStatement = connection.prepareStatement(getLoginInfo);
             ResultSet results = preparedStatement.executeQuery();
 
@@ -50,7 +50,7 @@ public class LoginImpl implements LoginABS {
     public void setSecurityQuestions(String answer1, String answer2) {
         try{
             Statement statement = connection.createStatement();
-            String insertSecurityQuestions = "insert into security_data(account_answer1, account_answer2) values(" + answer1 + ", " + answer2 + " where user_name = " + Database.user.getUsername() + ")";
+            String insertSecurityQuestions = "insert into security_data(account_answer1, account_answer2) values('" + answer1 + "', '" + answer2 + "' where user_name = '" + Database.user.getUsername() + "')";
             statement.executeQuery(insertSecurityQuestions);
         }
         catch(SQLException e){
@@ -65,7 +65,7 @@ public class LoginImpl implements LoginABS {
         Boolean success = false;
 
         try{
-            String getAnswers = "select account_answer1, account_answer2 from security_data where username = " + Database.user.getUsername() + ";";
+            String getAnswers = "select account_answer1, account_answer2 from security_data where username = '" + Database.user.getUsername() + "';";
             PreparedStatement statement = connection.prepareStatement(getAnswers);
             ResultSet results = statement.executeQuery();
 
@@ -121,11 +121,11 @@ public class LoginImpl implements LoginABS {
         try{
             Statement statement = connection.createStatement();
             //Inserts username and password into user_data table
-            String insertUserSQL = "insert into user_data values(" + userName + "," + passWord + ");";
+            String insertUserSQL = "insert into user_data values('" + userName + "', '" + passWord + "');";
             //Inserts name, middle name, and last name into account_data table
-            String insertAccountSQL = "insert into account_data values(" + name + "," + middleName + "," + lastName + ") where user_name = " + userName + ";";
+            String insertAccountSQL = "insert into account_data values('" + name + "', '" + middleName + "', '" + lastName + "') where user_name = '" + userName + "';";
             //Inserts security question 1, question 2, answer 1, and answer 2 into security_data table
-            String insertSecuritySQL = "insert into security_data values(" + q1 + "," + a1 + "," + q2 + "," + a2 + ") where user_name = " + userName + ";";
+            String insertSecuritySQL = "insert into security_data values('" + q1 + "', '" + a1 + "', '" + q2 + "', '" + a2 + "') where user_name = '" + userName + "';";
             statement.executeUpdate(insertUserSQL);
             statement.executeUpdate(insertAccountSQL);
             statement.executeUpdate(insertSecuritySQL);
@@ -147,7 +147,7 @@ public class LoginImpl implements LoginABS {
         String a1 = "";
         String a2 = "";
         try{
-            String getUserQuery = "select account_name, account_middlename, account_lastname, user_password, account_question1, account_question2, account_answer1, account_answer2 from user_data natural join account_data natural join security_data where user_name = " + Database.user.getUsername() + ";";
+            String getUserQuery = "select account_name, account_middlename, account_lastname, user_password, account_question1, account_question2, account_answer1, account_answer2 from user_data natural join account_data natural join security_data where user_name = '" + Database.user.getUsername() + "';";
             PreparedStatement preparedStatement = connection.prepareStatement(getUserQuery);
             ResultSet results = preparedStatement.executeQuery();
 
@@ -180,9 +180,9 @@ public class LoginImpl implements LoginABS {
         String a2 = user.getSecQ2Answer();
         try{
             Statement statement = connection.createStatement();
-            String changePassword = "update user_data set user_password = " + passWord + " where user_name = " + Database.user.getUsername() + ";";
-            String changeAccount = "update account_data set account_name = " + "'" + name + "', account_middlename = " + "'" + middleName + "', account_lastname = " + "'" + lastName + " where user_name = " + Database.user.getUsername() + ";";
-            String changeSecurity = "update security_data set account_question1 =" + "'" + q1 + "', account_question2 = " + "'" + q2 + "', account_answer1 = " + "'" + a1 + "', account_answer2 = " + a2 + " where user_name = " + Database.user.getUsername() + ";";
+            String changePassword = "update user_data set user_password = '" + passWord + "' where user_name = '" + Database.user.getUsername() + "';";
+            String changeAccount = "update account_data set account_name = '" + name + "', account_middlename = '" + middleName + "', account_lastname = '" + lastName + "' where user_name = '" + Database.user.getUsername() + "';";
+            String changeSecurity = "update security_data set account_question1 = '" + q1 + "', account_question2 = '" + q2 + "', account_answer1 = '" + a1 + "', account_answer2 = '" + a2 + "' where user_name = '" + Database.user.getUsername() + "';";
             
             statement.executeQuery(changePassword);
             statement.executeQuery(changeAccount);
