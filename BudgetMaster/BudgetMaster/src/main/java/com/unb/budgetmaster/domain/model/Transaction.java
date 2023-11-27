@@ -1,51 +1,45 @@
-package com.unb.budgetmaster.domain.model;
+package com.unb.budgetmaster.budgetmaster.domain.model;
+
+import java.time.LocalDate;
 
 public class Transaction {
-    String date ;
-    static int id;
-    double amount ;
-    String transacitonType; 
+    LocalDate date;
+    int id;
+    double amount;
+    String payee; 
+    String type; 
     String category;
 
-    public String getDate() {
-        return this.date;
-    }
-
-    public void setDate(String date) {
+    public Transaction(LocalDate date, int id, double amount, String payee, String type, String category) {
         this.date = date;
-    }
-
-    public int getId() {
-        return this.id;
-    }
-
-    public void setId(int id) {
         this.id = id;
-    }
-
-    public double getAmount() {
-        return this.amount;
-    }
-
-    public void setAmount(double amount) {
         this.amount = amount;
-    }
-
-    public String getType() {
-        return this.transacitonType;
-    }
-
-    public void setType(String type) {
-        this.transactionType = type;
-    }
-
-    public String getCategory() {
-        return this.category;
-    }
-
-    public void setCategory(String category) {
+        this.payee = payee;
+        this.type = type;
         this.category = category;
     }
 
-    
+    public LocalDate getDate() {
+        return date;
+    }
+
+    public int getID() {
+        return id;
+    }
+
+    public double getAmount() {
+        return amount;
+    }
+
+    public String getPayee() {
+        return payee;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public String getCategory() {
+        return category;
+    }
 }

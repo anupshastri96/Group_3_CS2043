@@ -14,6 +14,7 @@ public class CategoryImpl implements CategoryABS{
 
     @Override
     public void addCategory(Category category) {
+        String categoryName = category.getName();
         
     }
 
