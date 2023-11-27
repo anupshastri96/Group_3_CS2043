@@ -8,15 +8,15 @@ import java.sql.Statement;
 import java.time.LocalDate;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import com.unb.budgetmaster.data.implementation.DatabaseImpl;
+import com.unb.budgetmaster.data.implementation.Database;
 import com.unb.budgetmaster.domain.abs.AnalysisABS;
 import com.unb.budgetmaster.data.implementation.TransactionImpl;
 
 public class AnalysisImpl implements AnalysisABS{
     public static LocalDate date = LocalDate.now();
-    DatabaseImpl data = new DatabaseImpl();
+    Database data = new Database();
     TransactionImpl transaction = new TransactionImpl();
-    Connection connection = data.connectDatabase();
+    Connection connection = data.getDatabase();
 
     @Override
     public double getTotalSpent(String username) {

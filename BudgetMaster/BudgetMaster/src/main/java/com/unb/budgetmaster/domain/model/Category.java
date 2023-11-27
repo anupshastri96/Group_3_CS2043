@@ -3,7 +3,13 @@ package com.unb.budgetmaster.domain.model;
 public class Category {
     String name ;
     double budget;
-    String parent;
+    String type;
+
+    public Category(String name, double budget, String type){
+        this.name = name;
+        this.budget = budget;
+        this.type = type;
+    }
 
     public String getName() {
         return this.name;
@@ -21,11 +27,11 @@ public class Category {
         this.budget = budget;
     }
 
-    public String getParent() {
-        return this.parent;
+    public String getType() {
+        return this.type;
     }
 
-    public void setParent(String parent) {
-        this.parent = parent;
+    public void setType(String type) {
+        this.type = type;
     }
 }

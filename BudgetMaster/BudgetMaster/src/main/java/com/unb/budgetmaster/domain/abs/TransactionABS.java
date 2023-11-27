@@ -5,9 +5,11 @@ import com.unb.budgetmaster.domain.model.Transaction;
 import com.unb.budgetmaster.domain.model.Category;
 
 public interface TransactionABS {
-    Transaction getTransactionDetail(int id, String username);
-    void setTransactionDetails(Transaction transaction, String username);
-    void addTransaction(String date, int id, double amount, String type, String category, String username);
-    void deleteTransaction(Transaction transaction, String username);
-    ArrayList<Transaction> getTransactions(String type, Category category, String sort, String username);
+    Transaction getTransactionDetail(int id);
+    void setTransactionDetails(Transaction transaction);
+    void addTransaction(String date, int id, double amount, String type, String category);
+    void deleteTransaction(Transaction transaction);
+    ArrayList<Transaction> getTransactions(String type, Category category);
+    ArrayList<Transaction> getTransactions(String type);
+    ArrayList<Transaction> getTransactions(Category category);
 }

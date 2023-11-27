@@ -2,17 +2,14 @@ package com.unb.budgetmaster.data.implementation;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.sql.Statement;
 
-import com.unb.budgetmaster.domain.abs.DatabaseABS;
 import com.unb.budgetmaster.domain.constant.Constants;
+import com.unb.budgetmaster.domain.model.User;
 
-public class DatabaseImpl implements DatabaseABS {
-    Connection con = null;
-
-    @Override
-    public Connection connectDatabase() {
+public class Database {
+    static Connection con = null;
+    public static User user = null;
+    public static Connection getDatabase() {
         try {
             Class.forName("com.mysql.jdbc.Driver");
             con = DriverManager.getConnection(Constants.URL,Constants.USER,Constants.PASSWORD);
@@ -23,8 +20,11 @@ public class DatabaseImpl implements DatabaseABS {
         return con;
     }
 
-    @Override
-    public void disconnectDatabase() {
+    public static User getUser(String username){
+        return user;
+    }
+
+    public static void disconnectDatabase() {
         try {
             con.close();
         } catch (Exception e) {

@@ -8,12 +8,9 @@ import java.sql.Statement;
 
 import com.unb.budgetmaster.domain.abs.LoginABS;
 import com.unb.budgetmaster.domain.model.User;
-import com.unb.budgetmaster.data.implementation.DatabaseImpl;
 
 public class LoginImpl implements LoginABS {
-    DatabaseImpl data = new DatabaseImpl();
-    Connection connection = data.connectDatabase();
-
+    Connection connection = Database.getDatabase();
     @Override
     public Boolean checkLoginInfo(String username, String password) {
         String userName = "";
@@ -40,12 +37,6 @@ public class LoginImpl implements LoginABS {
     }
 
     @Override
-    public Boolean checkSignUpInfo(String firstname, String lastname, String username, String password) {
-        
-       return null;
-    }
-
-    @Override
     public Boolean confirmPassword(String pass, String confirmPass) {
         if(pass.equals(confirmPass)){
             return true;
@@ -56,10 +47,10 @@ public class LoginImpl implements LoginABS {
     }
 
     @Override
-    public void setSecurityQuestions(String answer1, String answer2, String username) {
+    public void setSecurityQuestions(String answer1, String answer2) {
         try{
             Statement statement = connection.createStatement();
-            String insertSecurityQuestions = "insert into security_data(account_answer1, account_answer2) values(" + answer1 + ", " + answer2 + " where user_name = " + username + ")";
+            String insertSecurityQuestions = "insert into security_data(account_answer1, account_answer2) values(" + answer1 + ", " + answer2 + " where user_name = " + Database.user.getUsername() + ")";
             statement.executeQuery(insertSecurityQuestions);
         }
         catch(SQLException e){
@@ -68,13 +59,13 @@ public class LoginImpl implements LoginABS {
     }
 
     @Override
-    public Boolean checkSecurityQuestions(String answer1, String answer2, String username) {
+    public Boolean checkSecurityQuestions(String answer1, String answer2) {
         String a1 = "";
         String a2 = "";
         Boolean success = false;
 
         try{
-            String getAnswers = "select account_answer1, account_answer2 from security_data where username = " + username + ";";
+            String getAnswers = "select account_answer1, account_answer2 from security_data where username = " + Database.user.getUsername() + ";";
             PreparedStatement statement = connection.prepareStatement(getAnswers);
             ResultSet results = statement.executeQuery();
 
@@ -95,7 +86,7 @@ public class LoginImpl implements LoginABS {
     @Override
     public Boolean doesUsernameExists(String username) {
         String userName = "";
-        Boolean success = false;
+        boolean success = false;
         try{
             String getUserName = "select user_name from user_data;";
             PreparedStatement statement = connection.prepareStatement(getUserName);
@@ -116,7 +107,7 @@ public class LoginImpl implements LoginABS {
 
     @Override
     public void createUser(User user) {
-        
+
         String name = user.getFirstName();
         String middleName = user.getMiddleName();
         String lastName = user.getLastName();
@@ -142,7 +133,12 @@ public class LoginImpl implements LoginABS {
         catch(SQLException e){
             e.printStackTrace();
         }
-       
+
     }
     
+    @Override
+    public void setLoginDetails(User user) {
+        
+    }
+
 }

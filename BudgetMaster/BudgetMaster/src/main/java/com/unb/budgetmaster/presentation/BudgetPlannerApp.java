@@ -1,6 +1,6 @@
 package com.unb.budgetmaster.budgetmaster.presentation;
 
-import com.unb.budgetmaster.data.implementation.DatabaseImpl;
+import com.unb.budgetmaster.data.implementation.Database;
 
 import javafx.application.Application;
 import javafx.geometry.Rectangle2D;

@@ -8,60 +8,76 @@ import java.util.ArrayList;
 
 import com.unb.budgetmaster.domain.abs.CategoryABS;
 import com.unb.budgetmaster.domain.model.Category;
-import com.unb.budgetmaster.data.implementation.DatabaseImpl;
 
 public class CategoryImpl implements CategoryABS{
     DatabaseImpl data = new DatabaseImpl();
-    Connection connection = data.connectDatabase();
-
+    Connection connection = data.getDatabase();
+    PreparedStatement statement;
+    String query = "";
     @Override
     public ArrayList<Category> getCategories(String type) {
         ArrayList<Category> allCategories = new ArrayList<Category>();
         Category category;
-        int categoryID = 0;
-        String categoryName = "";
+        String categoryName;
         double budget = 0;
-        String categoryQuery = "";
 
         try{
             if(type.equals("Spendings")){
-                categoryQuery = "select category_id, category_name, spendings_per_category from category_data natural join transaction_data where transaction_name = " + type + ";";
+                query = "select category_name, spendings_per_category from category_data natural join transaction_data where transaction_name = " + type + ";";
             }
             else if(type.equals("Savings")){
-                categoryQuery = "select category_id, category_name, savings_goal from category_data natural join transaction_data where transaction_name = " + type + ";";
+                query = "select category_name, savings_goal from category_data natural join transaction_data where transaction_name = " + type + ";";
             }
-            
-            PreparedStatement statement = connection.prepareStatement(categoryQuery);
+
+            statement = connection.prepareStatement(query);
             ResultSet results = statement.executeQuery();
 
             if(results.next()){
-                categoryID = results.getInt("category_id");
                 categoryName = results.getString("category_name");
                 if(type.equals("Savings")){
-                     budget = results.getDouble("savings_goal");
+                    budget = results.getDouble("savings_goal");
                 }
                 else if(type.equals("Spendings")){
                     budget = results.getDouble("spendings_per_category");
                 }
                 category = new Category(categoryName, budget, type);
-               
+                allCategories.add(category);
             }
         }
         catch(SQLException e){
-                e.printStackTrace();
+            e.printStackTrace();
         }
         return allCategories;
     }
 
     @Override
+    public Boolean checkCategoryExists(String category) {
+        query = "select " + category + " from category_data";
+        try {
+            statement = connection.prepareStatement(query);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        ResultSet results = null;
+        try {
+            results = statement.executeQuery();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return results != null;
+    }
+
+
+    @Override
     public void addCategory(Category category) {
-        String categoryName = category.getName();
-        
+        if(category.getType().equals("Spendings")){
+            query =  "insert into category_data(category_name) "
+        }else{
+            query =  "insert into category_data(category_name,"
+        }
     }
 
     @Override
     public void deleteCategory(Category category) {
-    
+
     }
-    
-}
