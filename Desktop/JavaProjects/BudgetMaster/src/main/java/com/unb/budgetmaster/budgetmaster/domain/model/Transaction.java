@@ -1,17 +1,16 @@
 package com.unb.budgetmaster.budgetmaster.domain.model;
 
-import com.unb.budgetmaster.budgetmaster.presentation.Category;
+import java.time.LocalDate;
 
 public class Transaction {
-    String date;
+    LocalDate date;
     int id;
     double amount;
     String payee; 
     String type; 
-    //Category category;
     String category;
 
-    public Transaction(String date, int id, double amount, String payee, String type, String category) {
+    public Transaction(LocalDate date, int id, double amount, String payee, String type, String category) {
         this.date = date;
         this.id = id;
         this.amount = amount;
@@ -20,7 +19,7 @@ public class Transaction {
         this.category = category;
     }
 
-    public String getDate() {
+    public LocalDate getDate() {
         return date;
     }
 

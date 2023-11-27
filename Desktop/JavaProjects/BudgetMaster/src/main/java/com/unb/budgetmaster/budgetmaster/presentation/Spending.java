@@ -1,23 +1,55 @@
 package com.unb.budgetmaster.budgetmaster.presentation;
 
 import com.unb.budgetmaster.budgetmaster.domain.implementation.AnalysisImpl;
+import com.unb.budgetmaster.budgetmaster.domain.implementation.TransactionImpl;
+import com.unb.budgetmaster.budgetmaster.domain.model.Transaction;
+
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class Spending {
-    private AnalysisImpl analysisImpl;
-    private SpendingImpl spendingImpl;
+    // Constants
+    private final int TRANSACTIONS_DISPLAYED = 5;
 
-    public void getContent(Label contentLabel, VBox contentContainer) {
-        //Instantiate our implementations
+    // Starting index for transactions
+    private int startIndex = 0;
+    
+    // Implementation Instances
+    private AnalysisImpl analysisImpl;
+    private TransactionImpl transactionImpl;
+
+    // Buttons
+    Button nextButton;
+    Button previousButton;
+
+    // VBoxes
+    VBox transactionsContainer;
+
+    public void getContent(Label contentLabel, VBox contentContainer, ArrayList<String> loginInformation) {
+        // Instantiate our implementations
+        transactionImpl = new TransactionImpl();
         analysisImpl = new AnalysisImpl();
-        spendingImpl = new SpendingImpl();
+
+        // Get username from login information
+        String username = loginInformation.get(3);
+
+        // Get first day of month and current day
+        LocalDate firstDayOfMonth = LocalDate.now().withDayOfMonth(1);
+        LocalDate currentDay = LocalDate.now();
 
         // Modify contentLabel
-        contentLabel.setText("Your Monthly Spending: " + String.valueOf(analysisImpl.getTotalSpent()));
+        contentLabel.setText("Your Monthly Spending: " + analysisImpl.getTotalSpent(username, firstDayOfMonth, currentDay));
 
         // Create HBox for Title and Edit button
         HBox titleBox = new HBox(20);
@@ -26,64 +58,143 @@ public class Spending {
         Label titleLabel = new Label("Saving Goals");
 
         // Create Edit button
-        Button editButton = new Button("Edit");
+        Button editButton = new Button("Add Spending");
+        editButton.setOnAction(event -> editSpending(username));
 
         // Add Title label and Edit button to HBox
         titleBox.getChildren().addAll(titleLabel, editButton);
 
-        // Labels for columns
-        Label categoryLabel = new Label("Category of Spending");
-        Label percentageLabel = new Label("% of Spending");
-        Label amountLabel = new Label("Amount Paid This Month");
+        // Label for displaying transaction history
+        Label historyLabel = new Label("List of Spendings:");
 
-        // Center align the column labels
-        categoryLabel.setStyle("-fx-alignment: CENTER;");
-        percentageLabel.setStyle("-fx-alignment: CENTER;");
-        amountLabel.setStyle("-fx-alignment: CENTER;");
+        // Display transactions
+        transactionsContainer = new VBox(10);
+        updateTransactions(transactionsContainer, transactionImpl, nextButton, previousButton, username);
 
-        // Create header row
-        HBox headerRow = new HBox(10, categoryLabel, percentageLabel, amountLabel);
+        // Create Previous and Next buttons
+        previousButton = new Button("Previous");
+        nextButton = new Button("Next");
 
-        // Add header row to contentContainer
-        contentContainer.getChildren().addAll(titleBox, headerRow);
+        // Set button event handlers
+        previousButton.setOnAction(event -> {
+            startIndex = Math.max(startIndex - TRANSACTIONS_DISPLAYED, 0);
+            updateTransactions(transactionsContainer, transactionImpl, nextButton, previousButton, username);
+        });
 
-        // Create "Create New Category of Spending" button
-        Button createNewCategoryButton = new Button("Create New Category of Spending");
+        nextButton.setOnAction(event -> {
+            int totalTransactions = transactionImpl.getTransactions(username, "Spendings").size();
+            startIndex = Math.min(startIndex + TRANSACTIONS_DISPLAYED, totalTransactions - 1);
+            updateTransactions(transactionsContainer, transactionImpl, nextButton, previousButton, username);
+        });
 
-        // Display Spendings
-        VBox spendingsContainer = new VBox(10);
-        updateSpendings(spendingsContainer, spendingImpl, createNewCategoryButton);
+        // Set initial button visibility
+        updateButtonVisibility(transactionImpl, nextButton, previousButton, username);
+
+        // Create HBox for buttons
+        HBox buttonsBox = new HBox(10, previousButton, nextButton);
+        buttonsBox.setStyle("-fx-alignment: CENTER;");
 
         // Add components to contentContainer
-        contentContainer.getChildren().addAll(spendingsContainer, createNewCategoryButton);
+        contentContainer.getChildren().addAll(titleBox, historyLabel, transactionsContainer, buttonsBox);
     }
 
-    private static void updateSpendings(VBox spendingsContainer, SpendingImpl spendingImpl, Button createNewCategoryButton) {
-        spendingsContainer.getChildren().clear();
+    private void updateTransactions(VBox transactionsContainer, TransactionImpl transactionImpl, Button nextButton, Button prevButton, String username) {
+        // Clear the transactions currently being displayed
+        transactionsContainer.getChildren().clear();
 
-        // Get spendings from the provider
-        ArrayList<Spending> spendings = spendingImpl.getSpending();
+        // Get transactions from the implementation
+        ArrayList<Transaction> transactionsList = transactionImpl.getTransactions(username, "Spendings");
 
-        // Display spendings
-        for (Spending spending : spendings) {
-            HBox spendingRow = createSpendingRow(spending);
-            spendingsContainer.getChildren().add(spendingRow);
+        // Inverse order of transactions so that first one is the most recent
+        Collections.reverse(transactionsList);
+
+        // Display transactions based on the current startIndex
+        for (int i = startIndex; i < startIndex + TRANSACTIONS_DISPLAYED && i < transactionsList.size(); i++) {
+            Label transactionLabel = new Label(transactionsList.get(i).toString());
+            transactionsContainer.getChildren().add(transactionLabel);
         }
 
-        // Update button visibility based on the number of spendings
-        createNewCategoryButton.setDisable(spendings.size() >= 5);
+        // Update button visibility based on the startIndex and total transactions
+        updateButtonVisibility(transactionImpl, nextButton, prevButton, username);
     }
 
-    private static HBox createSpendingRow(Spending spending) {
-        Label categoryLabel = new Label(spending.getCategory());
-        Label percentageLabel = new Label(spending.getPercentage());
-        Label amountLabel = new Label(spending.getAmount());
+    private void updateButtonVisibility(TransactionImpl transactionImpl, Button nextButton, Button previousButton, String username) {
+        ArrayList<Transaction> transactionsList = transactionImpl.getTransactions(username, "Spendings");
+        int totalTransactions = transactionsList.size();
 
-        // Center align the data
-        categoryLabel.setStyle("-fx-alignment: CENTER;");
-        percentageLabel.setStyle("-fx-alignment: CENTER;");
-        amountLabel.setStyle("-fx-alignment: CENTER;");
+        // Show/hide Next button based on remaining transactions
+        nextButton.setDisable(startIndex + TRANSACTIONS_DISPLAYED >= totalTransactions);
 
-        return new HBox(10, categoryLabel, percentageLabel, amountLabel);
+        // Show/hide Previous button based on the current startIndex
+        previousButton.setDisable(startIndex <= 0);
+    }
+
+    private void editSpending(String username) {
+        // Create a new stage for the popup
+        Stage popupStage = new Stage();
+        popupStage.setTitle("Add Spending");
+        popupStage.initModality(Modality.APPLICATION_MODAL);
+
+        // Create labels and text fields for the spending details
+        Label titleLabel = new Label("Add Spending");
+        Label payeeLabel = new Label("Payee");
+        Label amountLabel = new Label("Amount");
+        Label dateLabel = new Label("Date");
+        Label categoryLabel = new Label("Category");
+
+        TextField payeeField = new TextField();
+        TextField amountField = new TextField();
+        TextField dateField = new TextField();
+        dateField.setPromptText("DD/MM/YYYY");
+        TextField categoryField = new TextField();
+        categoryField.setPromptText("Leave blank if none");
+
+        // Create buttons for submitting or canceling the edit
+        Button submitButton = new Button("Submit");
+        Button backButton = new Button("Back");
+
+        // Set button event handlers
+        backButton.setOnAction(event -> popupStage.close());
+        submitButton.setOnAction(event -> {
+            // Parse date from the text field
+            LocalDate date;
+            try {
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+                date = LocalDate.parse(dateField.getText(), formatter);
+            } catch (Exception e) {
+                // Handle invalid date format
+                System.out.println("Invalid date format");
+                return;
+            }
+
+            // Call addTransaction method with the entered values
+            transactionImpl.addTransaction(username, date, Double.parseDouble(amountField.getText()), payeeField.getText(), "Spendings", categoryField.getText());
+
+            // Update transactions and close the popup
+            updateTransactions(transactionsContainer, transactionImpl, nextButton, previousButton, username);
+            popupStage.close();
+        });
+
+        // Create layout for the popup
+        VBox popupLayout = new VBox(10);
+        popupLayout.getChildren().addAll(
+                titleLabel,
+                payeeLabel, payeeField,
+                amountLabel, amountField,
+                dateLabel, dateField,
+                categoryLabel, categoryField,
+                new HBox(10, backButton, submitButton)
+        );
+
+        // Set style for the labels
+        titleLabel.setStyle("-fx-font-size: 16; -fx-font-weight: bold;");
+
+        // Create scene for the popup
+        Scene popupScene = new Scene(popupLayout, 300, 300);
+        popupStage.setScene(popupScene);
+
+        // Show the popup
+        popupStage.showAndWait();
     }
 }
+// End of Spending class

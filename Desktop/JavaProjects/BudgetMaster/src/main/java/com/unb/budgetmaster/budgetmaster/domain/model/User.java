@@ -4,19 +4,19 @@ public class User {
     private String firstname;
     private String middlename;
     private String lastname;
-    private String password;
     private String username;
+    private String password;
     private String secQ1;
     private String secQ1Answer;
     private String secQ2;
     private String secQ2Answer;
 
-    public User(String firstname, String middlename, String lastname, String password, String username, String secQ1, String secQ1Answer, String secQ2, String secQ2Answer) {
+    public User(String firstname, String middlename, String lastname, String username, String password, String secQ1, String secQ1Answer, String secQ2, String secQ2Answer) {
         this.firstname = firstname;
         this.middlename = middlename;
         this.lastname = lastname;
-        this.password = password;
         this.username = username;
+        this.password = password;
         this.secQ1 = secQ1;
         this.secQ1Answer = secQ1Answer;
         this.secQ2 = secQ2;

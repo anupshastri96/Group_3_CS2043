@@ -3,7 +3,8 @@ package com.unb.budgetmaster.budgetmaster.presentation;
 import com.unb.budgetmaster.budgetmaster.domain.implementation.AnalysisImpl;
 import com.unb.budgetmaster.budgetmaster.domain.implementation.TransactionImpl;
 import com.unb.budgetmaster.budgetmaster.domain.model.Transaction;
-
+import java.util.Collections;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -11,17 +12,34 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
 public class Savings {
+    // Constants
+    private final int TRANSACTIONS_DISPLAYED = 5;
+
+    // Starting index for transactions
+    private int startIndex = 0;
+    
     // Implementation Instances
     private AnalysisImpl analysisImpl;
     private TransactionImpl transactionImpl;
 
-    public void getContent(Label contentLabel, VBox contentContainer) {
+    // Buttons
+    Button nextButton;
+    Button previousButton;
+
+    public void getContent(Label contentLabel, VBox contentContainer, ArrayList<String> loginInformation) {
         // Instantiate implementations
         transactionImpl = new TransactionImpl();
         analysisImpl = new AnalysisImpl();
 
+        // Get username from login information
+        String username = loginInformation.get(3);
+
+        // Get first day of month and current day
+        LocalDate firstDayOfMonth = LocalDate.now().withDayOfMonth(1);
+        LocalDate currentDay = LocalDate.now();
+
         // Modify contentLabel
-        contentLabel.setText("Your Monthly Savings: " + String.valueOf(analysisImpl.getTotalSaved()));
+        contentLabel.setText("Your Monthly Savings: " + analysisImpl.getTotalSaved(username, firstDayOfMonth, currentDay));
 
         // Create HBox for Title and Edit button
         HBox titleBox = new HBox(20);
@@ -35,51 +53,69 @@ public class Savings {
         // Add Title label and Edit button to HBox
         titleBox.getChildren().addAll(titleLabel, editButton);
 
-        // Create components
-        Label goalLabel = new Label("Goal");
-        Label percentageLabel = new Label("% to Achieving Goal");
-        Label currentAmountLabel = new Label("Current Amount Invested to Goal");
+        // Label for displaying transaction history
+        Label historyLabel = new Label("List of Savings:");
 
-        // Center align the titles
-        goalLabel.setStyle("-fx-alignment: CENTER;");
-        percentageLabel.setStyle("-fx-alignment: CENTER;");
-        currentAmountLabel.setStyle("-fx-alignment: CENTER;");
+        // Display transactions
+        VBox transactionsContainer = new VBox(10);
+        updateTransactions(transactionsContainer, transactionImpl, nextButton, previousButton, username);
 
-        // Create header row
-        HBox headerRow = new HBox(10, goalLabel, percentageLabel, currentAmountLabel);
+        // Create Previous and Next buttons
+        previousButton = new Button("Previous");
+        nextButton = new Button("Next");
 
-        // Add a line separator
-        Label separator = new Label("------------------------------------------------------");
-        separator.setStyle("-fx-alignment: CENTER;");
+        // Set button event handlers
+        previousButton.setOnAction(event -> {
+            startIndex = Math.max(startIndex - TRANSACTIONS_DISPLAYED, 0);
+            updateTransactions(transactionsContainer, transactionImpl, nextButton, previousButton, username);
+        });
 
-        // Add header row and separator to contentContainer
-        contentContainer.getChildren().addAll(titleBox, headerRow, separator);
+        nextButton.setOnAction(event -> {
+            int totalTransactions = transactionImpl.getTransactions(username, "Savings").size();
+            startIndex = Math.min(startIndex + TRANSACTIONS_DISPLAYED, totalTransactions - 1);
+            updateTransactions(transactionsContainer, transactionImpl, nextButton, previousButton, username);
+        });
 
-        // Create array list of Goal objects
-        ArrayList<Transaction> transactions = transactionImpl.getTransactions("Savings", null, null);
+        // Set initial button visibility
+        updateButtonVisibility(transactionImpl, nextButton, previousButton, username);
 
-        // Display up to 5 goals
-        for (int i = 0; i < Math.min(transactions.size(), 5); i++) {
-            Transaction goal = transactions.get(i);
-            HBox goalRow = createGoalRow(goal);
-            contentContainer.getChildren().add(goalRow);
+        // Create HBox for buttons
+        HBox buttonsBox = new HBox(10, previousButton, nextButton);
+        buttonsBox.setStyle("-fx-alignment: CENTER;");
+
+        // Add components to contentContainer
+        contentContainer.getChildren().addAll(titleBox, historyLabel, transactionsContainer, buttonsBox);
+    }
+
+    private void updateTransactions(VBox transactionsContainer, TransactionImpl transactionImpl, Button nextButton, Button prevButton, String username) {
+        // Clear the transactions currently being displayed
+        transactionsContainer.getChildren().clear();
+
+        // Get transactions from the implementation
+        ArrayList<Transaction> transactionsList = transactionImpl.getTransactions(username, "Savings");
+
+        // Inverse order of transactions so that first one is the most recent
+        Collections.reverse(transactionsList);
+
+        // Display transactions based on the current startIndex
+        for (int i = startIndex; i < startIndex + TRANSACTIONS_DISPLAYED && i < transactionsList.size(); i++) {
+            Label transactionLabel = new Label(transactionsList.get(i).toString());
+            transactionsContainer.getChildren().add(transactionLabel);
         }
 
-        // Add "Create New Goal" button
-        Button createNewGoalButton = new Button("Create New Goal");
-        contentContainer.getChildren().add(createNewGoalButton);
+        // Update button visibility based on the startIndex and total transactions
+        updateButtonVisibility(transactionImpl, nextButton, prevButton, username);
     }
 
-    private static HBox createGoalRow(Transaction goal) {
-        Label goalLabel = new Label(goal.get());
-        Label percentageLabel = new Label(goal.getPercentage());
-        Label currentAmountLabel = new Label(goal.getCurrentAmount());
+    private void updateButtonVisibility(TransactionImpl transactionImpl, Button nextButton, Button previousButton, String username) {
+        ArrayList<Transaction> transactionsList = transactionImpl.getTransactions(username, "Savings");
+        int totalTransactions = transactionsList.size();
 
-        // Center align the data
-        goalLabel.setStyle("-fx-alignment: CENTER;");
-        percentageLabel.setStyle("-fx-alignment: CENTER;");
-        currentAmountLabel.setStyle("-fx-alignment: CENTER;");
+        // Show/hide Next button based on remaining transactions
+        nextButton.setDisable(startIndex + TRANSACTIONS_DISPLAYED >= totalTransactions);
 
-        return new HBox(10, goalLabel, percentageLabel, currentAmountLabel);
+        // Show/hide Previous button based on the current startIndex
+        previousButton.setDisable(startIndex <= 0);
     }
 }
+// End of Savings class

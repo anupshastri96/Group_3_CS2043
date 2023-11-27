@@ -1,10 +1,9 @@
-package com.unb.budgetmaster.budgetmaster.domain.implementation;
+package com.unb.budgetmaster.data.implementation;
 
 import java.util.ArrayList;
-import javafx.scene.control.Label;
 
-import com.unb.budgetmaster.budgetmaster.domain.abs.CategoryABS;
-import com.unb.budgetmaster.budgetmaster.presentation.Category;
+import com.unb.budgetmaster.domain.abs.CategoryABS;
+import com.unb.budgetmaster.domain.model.Category;
 
 public class CategoryImpl implements CategoryABS{
 
@@ -15,6 +14,7 @@ public class CategoryImpl implements CategoryABS{
 
     @Override
     public void addCategory(Category category) {
+        String categoryName = category.getName();
         
     }
 

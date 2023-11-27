@@ -1,26 +1,18 @@
-package com.unb.budgetmaster.budgetmaster.domain.implementation;
+package com.unb.budgetmaster.data.implementation;
 
-import com.unb.budgetmaster.budgetmaster.domain.abs.AnalysisABS;
+import com.unb.budgetmaster.domain.abs.AnalysisABS;
+
+import java.time.LocalDate;
 
 public class AnalysisImpl implements AnalysisABS{
 
     @Override
-    public double getTotalSpent() {
+    public double getTotalSpent(LocalDate firstDayOfMonth, LocalDate currentDay) {
         return 0;
     }
 
     @Override
-    public double getTotalSaved() {
-        return 0;
-    }
-
-    @Override
-    public double getTotalSpent(String date1, String date2) {
-        return 0;
-    }
-
-    @Override
-    public double getTotalSaved(String date1, String date2) {
+    public double getTotalSaved(LocalDate firstDayOfMonth, LocalDate currentDay) {
         return 0;
     }
 
@@ -29,13 +21,29 @@ public class AnalysisImpl implements AnalysisABS{
         return 0;
     }
     @Override
-    public double getUsualSpent(String date1, String date2) {
+    public double getUsualSpent(LocalDate date1, LocalDate date2) {
      return 0;
     }
+
+    @Override
+    public double getUsualSaved() {
+        return 0;
+    }
+
 
     @Override
     public double getBalance() {
         return 0;
     }
-    
+
+    @Override
+    public double getAmountSpentByCategory(String category, LocalDate date1, LocalDate date2) {
+        return 0;
+    }
+
+    @Override
+    public double getBudgetTotal() {
+        return 0;
+    }
+
 }

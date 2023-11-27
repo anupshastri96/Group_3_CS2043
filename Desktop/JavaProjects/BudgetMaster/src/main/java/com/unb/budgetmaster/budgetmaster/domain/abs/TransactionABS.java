@@ -1,13 +1,16 @@
 package com.unb.budgetmaster.budgetmaster.domain.abs;
+import java.time.LocalDate;
 import java.util.ArrayList;
 
+import com.unb.budgetmaster.budgetmaster.domain.model.Category;
 import com.unb.budgetmaster.budgetmaster.domain.model.Transaction;
-import com.unb.budgetmaster.budgetmaster.presentation.Category;
 
 public interface TransactionABS {
-    Transaction getTransactionDetail(int id);
+    Transaction getTransactionDetails(int id);
     void setTransactionDetails(Transaction transaction);
-    void addTransaction(Category category, String type);
-    void deleteTransaction(Transaction transaction);
-    ArrayList<Transaction> getTransactions(String type, Category category, String sort);
+    void addTransaction(String username, LocalDate date, double amount, String payee, String type, String category);
+    void deleteTransaction(String username, int id);
+    ArrayList<Transaction> getTransactions(String username, String type, Category category, String sort);
+    ArrayList<Transaction> getTransactions(String username);
+    public ArrayList<Transaction> getTransactions(String username, String type);
 }
