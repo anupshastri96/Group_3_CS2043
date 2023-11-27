@@ -1,8 +1,9 @@
-package com.unb.budgetmaster.budgetmaster.presentation;
+package com.unb.budgetmaster.presentation;
 
-import java.util.ArrayList;
-
-import com.unb.budgetmaster.budgetmaster.domain.implementation.LoginImpl;
+import com.unb.budgetmaster.data.implementation.Database;
+import com.unb.budgetmaster.data.implementation.LoginImpl;
+import com.unb.budgetmaster.domain.model.User;
+import com.unb.budgetmaster.presentation.SecurityQuestionsUI;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Button;
@@ -12,7 +13,7 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.geometry.Pos;
 import javafx.scene.layout.VBox;
-import javafx.scene.layout.Pane;
+import javafx.scene.layout.BorderPane;
 
 public class SignUpUI {
     // Declare label for enter details
@@ -24,7 +25,7 @@ public class SignUpUI {
     // UI Instances
     private SecurityQuestionsUI securityQuestionsUI; // Change name of class to match this
  
-    public void getContent(Pane root){
+    public void getContent(BorderPane root){
         // Instantiate Implementation
         loginImpl = new LoginImpl();
 
@@ -83,10 +84,10 @@ public class SignUpUI {
 
         // Set the root Pane to the Sign Up UI
         root.getChildren().clear();
-        root.getChildren().add(topPane);
+        root.setCenter(topPane);
     }
 
-    private void confirmSignUp(String firstname, String middlename, String lastname, String username, String password, String confirmPassword, Pane root) {
+    private void confirmSignUp(String firstname, String middlename, String lastname, String username, String password, String confirmPassword, BorderPane root) {
         // Check if First Name field isn't blank
         if(firstname.equals("")) {
             enterDetail_lb.setText("Please enter a First Name");
@@ -118,27 +119,20 @@ public class SignUpUI {
         }
 
         // Verify that the username doesn't exist in our database
-        if(loginImpl.doesUsernameExists(username)== true) {
+        if(loginImpl.doesUsernameExists(username)) {
             enterDetail_lb.setText("Username already taken/Invalid username");
             return;
         }
         
         // Verify that our Password and Confirm Password fields match
-        if(loginImpl.confirmPassword(password, confirmPassword) == false) {
+        if(!loginImpl.confirmPassword(password, confirmPassword)) {
             enterDetail_lb.setText("Passwords do not match");
             return;
         }
 
-        // Create array of strings for the login information
-        ArrayList<String> loginInformation = new ArrayList<String>();
-        loginInformation.add(firstname);
-        loginInformation.add(middlename);
-        loginInformation.add(lastname);
-        loginInformation.add(username);
-        loginInformation.add(password);
-
+        Database.user = new User(firstname,middlename,lastname,username,password);
         // Switch to Security Questions Page
-        securityQuestionsUI.getContent(root, loginInformation, true);
+        securityQuestionsUI.getContent(root, true);
     }
 }
 // End of SignUpUI class

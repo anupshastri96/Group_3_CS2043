@@ -1,12 +1,16 @@
-package com.unb.budgetmaster.budgetmaster.presentation;
+package com.unb.budgetmaster.presentation;
 
-import com.unb.budgetmaster.budgetmaster.domain.implementation.AnalysisImpl;
-import com.unb.budgetmaster.budgetmaster.domain.implementation.CategoryImpl;
-
+import com.unb.budgetmaster.data.implementation.AnalysisImpl;
+import com.unb.budgetmaster.data.implementation.CategoryImpl;
+import com.unb.budgetmaster.data.implementation.Database;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontPosture;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -34,18 +38,22 @@ public class Analysis {
     private Label savedAmountLabel;
     private Label typicalSpendingLabel;
     private Label typicalSavingsLabel;
-    
+
 
     // Implementation Instances
     private AnalysisImpl analysisImpl;
     private CategoryImpl categoryImpl;
 
-    public void getContent(Label contentLabel, Pane root, ArrayList<String> loginInformation) {
+    // UI Elements
+    private HBox buttonsBox;
+    private VBox categoriesContainer;
+
+    public void getContent(Label contentLabel, VBox contentContainer) {
         analysisImpl = new AnalysisImpl();
         categoryImpl = new CategoryImpl();
 
         // Get username from login information
-        String username = loginInformation.get(3);
+        String username = Database.user.getUsername();
 
         // Modify contentLabel
         contentLabel.setText("Analyze your expenses");
@@ -54,51 +62,55 @@ public class Analysis {
         // Display current month and remaining budget
         LocalDate firstDayOfMonth = LocalDate.now().withDayOfMonth(1);
         LocalDate currentDay = LocalDate.now();
-        String remainingBudgetText = "You have spent: $" + analysisImpl.getTotalSpent(username, firstDayOfMonth, currentDay) + " since " + firstDayOfMonth;
-        String remainingAmountText = "You still have $" + (analysisImpl.getBudgetTotal(username) - analysisImpl.getTotalSpent(username, firstDayOfMonth, currentDay))  + " to spend!";
+        String remainingBudgetText = "You have spent: $" + analysisImpl.getTotalSpent(firstDayOfMonth, currentDay) + " since " + firstDayOfMonth;
+        String remainingAmountText = "You still have $" + (analysisImpl.getBudgetTotal() - analysisImpl.getTotalSpent( firstDayOfMonth, currentDay))  + " to spend!";
 
         // Display saved amount since the start of the month
-        String savedAmountText = "You managed to save: $" + analysisImpl.getTotalSaved(username, firstDayOfMonth, currentDay) + " since " + firstDayOfMonth;
+        String savedAmountText = "You managed to save: $" + analysisImpl.getTotalSaved(firstDayOfMonth, currentDay) + " since " + firstDayOfMonth;
 
         // Display typical spending and savings
-        String typicalSpendingText = "Your typical monthly spending: $" + analysisImpl.getUsualSpent(username);
-        String typicalSavingsText = "Your typical monthly savings: $" + analysisImpl.getUsualSaved(username);
+        String typicalSpendingText = "Your typical monthly spending: $" + analysisImpl.getUsualSpent();
+        String typicalSavingsText = "Your typical monthly savings: $" + analysisImpl.getUsualSaved();
 
         // Create labels for the above texts
         remainingBudgetLabel = new Label(remainingBudgetText);
+        remainingBudgetLabel.setFont(Font.font("verdana", FontPosture.REGULAR, 18));
         remainingAmountLabel = new Label(remainingAmountText);
+        remainingAmountLabel.setFont(Font.font("verdana", FontPosture.REGULAR, 18));
         savedAmountLabel = new Label(savedAmountText);
+        savedAmountLabel.setFont(Font.font("verdana", FontPosture.REGULAR, 18));
         typicalSpendingLabel = new Label(typicalSpendingText);
+        typicalSpendingLabel.setFont(Font.font("verdana", FontPosture.REGULAR, 18));
         typicalSavingsLabel = new Label(typicalSavingsText);
-
-        // Left align the labels
-        remainingBudgetLabel.setStyle("-fx-alignment: LEFT;");
-        remainingAmountLabel.setStyle("-fx-alignment: LEFT;");
-        savedAmountLabel.setStyle("-fx-alignment: LEFT;");
-        typicalSpendingLabel.setStyle("-fx-alignment: LEFT;");
-        typicalSavingsLabel.setStyle("-fx-alignment: LEFT;");
+        typicalSavingsLabel.setFont(Font.font("verdana", FontPosture.REGULAR, 18));
 
         // Create "Analyze through dates" button
         Button analyzeThroughDatesButton = new Button("Analyze through dates");
-        analyzeThroughDatesButton.setOnAction(event -> showDateAnalysisPopup(username));
+        analyzeThroughDatesButton.setOnAction(event -> showDateAnalysisPopup());
+        analyzeThroughDatesButton.setAlignment(Pos.BOTTOM_LEFT);
 
         // Create "Analyze through Categories" button
         Button analyzeThroughCategoriesButton = new Button("Analyze through Categories");
-        analyzeThroughCategoriesButton.setOnAction(event -> showCategoryAnalysis(root, contentLabel, username, loginInformation));
+        analyzeThroughCategoriesButton.setOnAction(event -> showCategoryAnalysis(contentContainer, contentLabel));
+        analyzeThroughCategoriesButton.setAlignment(Pos.BOTTOM_RIGHT);
+
+        HBox buttonBox = new HBox(20);
+        buttonBox.getChildren().addAll(analyzeThroughDatesButton, analyzeThroughCategoriesButton);
+        buttonBox.setAlignment(Pos.BOTTOM_CENTER);
 
         // Add components to contentContainer
-        root.getChildren().addAll(
+        contentContainer.getChildren().addAll(
                 remainingBudgetLabel,
                 remainingAmountLabel,
                 savedAmountLabel,
                 typicalSpendingLabel,
                 typicalSavingsLabel,
-                analyzeThroughDatesButton,
-                analyzeThroughCategoriesButton
+                buttonBox
         );
+        contentContainer.setSpacing(40);
     }
 
-    private void showDateAnalysisPopup(String username) {
+    private void showDateAnalysisPopup() {
         // Create a new stage for the popup
         Stage popupStage = new Stage();
         popupStage.setTitle("Analyze through dates");
@@ -129,9 +141,13 @@ public class Analysis {
         Button analyzeButton = new Button("Analyze");
         analyzeButton.setOnAction(event -> {
             analyzeThroughDates(startDayField.getText(), startMonthField.getText(), startYearField.getText(),
-                    endDayField.getText(), endMonthField.getText(), endYearField.getText(), username);
+                    endDayField.getText(), endMonthField.getText(), endYearField.getText());
             popupStage.close();
         });
+
+        HBox analyzeButtonBox = new HBox(10, analyzeButton);
+        analyzeButtonBox.setAlignment(Pos.CENTER);
+        analyzeButtonBox.setPadding(new Insets(15));
 
         // Create layout for the popup
         VBox popupLayout = new VBox(10);
@@ -153,7 +169,7 @@ public class Analysis {
     }
 
     private void analyzeThroughDates(String startDay, String startMonth, String startYear,
-                                            String endDay, String endMonth, String endYear, String username) {
+                                            String endDay, String endMonth, String endYear) {
         try {
             // Get date values as ints from passed in values
             int startDayInt = Integer.parseInt(startDay);
@@ -172,14 +188,14 @@ public class Analysis {
             return;
         }
 
-        updateValues(username);
+        updateValues();
         return;
     }
 
-    private void updateValues(String username) {
+    private void updateValues() {
         // Set new strings for amount spent and amount saved within given range
-        String newRemainingBudgetText = "You have spent: $" + analysisImpl.getTotalSpent(username, startDate, endDate) + " from " + startDate + " until " + endDate;
-        String newSavedAmountText = "You managed to save: $" + analysisImpl.getTotalSaved(username, startDate, endDate) + " from " + startDate + " until " + endDate;
+        String newRemainingBudgetText = "You have spent: $" + analysisImpl.getTotalSpent( startDate, endDate) + " from " + startDate + " until " + endDate;
+        String newSavedAmountText = "You managed to save: $" + analysisImpl.getTotalSaved( startDate, endDate) + " from " + startDate + " until " + endDate;
 
         // Set the labels to have the new text
         remainingBudgetLabel.setText(newRemainingBudgetText);
@@ -188,9 +204,9 @@ public class Analysis {
         return;
     }
 
-    private void showCategoryAnalysis(Pane root, Label contentLabel, String username, ArrayList<String> loginInformation) {
+    private void showCategoryAnalysis(VBox contentContainer, Label contentLabel) {
         // Clear content
-        clearContent(root);
+        clearContent(contentContainer);
 
         // Change contentLabel
         contentLabel.setText("Category Analysis");
@@ -209,11 +225,11 @@ public class Analysis {
         HBox headerRow = new HBox(10, categoryLabel, percentageLabel, amountPaidLabel);
 
         // Add header row to contentContainer
-        root.getChildren().add(headerRow);
+        contentContainer.getChildren().add(headerRow);
 
         // Display categories
-        VBox categoriesContainer = new VBox(10);
-        updateCategories(categoriesContainer, username);
+        categoriesContainer = new VBox(10);
+        updateCategories(categoriesContainer);
 
         // Create "Analyze through Categories" buttons
         Button previousCategoriesButton = new Button("Previous");
@@ -225,13 +241,13 @@ public class Analysis {
         // Set button events
         previousCategoriesButton.setOnAction(event -> {
             categoryStartIndex = Math.max(categoryStartIndex - CATEGORIES_PER_PAGE, 0);
-            updateCategories(categoriesContainer, username);
+            updateCategories(categoriesContainer);
         });
 
         nextCategoriesButton.setOnAction(event -> {
-            int totalCategories = categoryImpl.getCategories(username, currentAnalysisType).size();
+            int totalCategories = categoryImpl.getCategories(currentAnalysisType).size();
             categoryStartIndex = Math.min(categoryStartIndex + CATEGORIES_PER_PAGE, totalCategories - 1);
-            updateCategories(categoriesContainer, username);
+            updateCategories(categoriesContainer);
         });
 
         switchAnalysisTypeButton.setOnAction(event -> {
@@ -243,18 +259,18 @@ public class Analysis {
                 switchAnalysisTypeButton.setText("Switch to Savings");
             }
             categoryStartIndex = 0; // Reset category index when switching types
-            updateCategories(categoriesContainer, username);
+            updateCategories(categoriesContainer);
         });
 
-        returnToMonthlyAnalysisButton.setOnAction(event -> getContent(contentLabel, root, loginInformation));
+        returnToMonthlyAnalysisButton.setOnAction(event -> getContent(contentLabel, contentContainer));
 
-        analyzeCategoriesThroughDatesButton.setOnAction(event -> showDateAnalysisPopup(username));
+        analyzeCategoriesThroughDatesButton.setOnAction(event -> showDateAnalysisPopup());
 
         // Set initial button visibility
         updateCategoryButtonVisibility();
 
         // Create HBox for buttons
-        HBox buttonsBox = new HBox(10,
+        buttonsBox = new HBox(10,
                 previousCategoriesButton,
                 nextCategoriesButton,
                 switchAnalysisTypeButton,
@@ -265,23 +281,23 @@ public class Analysis {
         buttonsBox.setStyle("-fx-alignment: CENTER_LEFT;");
 
         // Add components to contentContainer
-        root.getChildren().addAll(categoriesContainer, buttonsBox);
+        contentContainer.getChildren().addAll(categoriesContainer, buttonsBox);
     }
 
-    private void updateCategories(VBox categoriesContainer, String username) {
+    private void updateCategories(VBox categoriesContainer) {
         categoriesContainer.getChildren().clear();
 
         // Get categories from the provider
         ArrayList<String> categories = new ArrayList<String>();
-        int totalCategories = categoryImpl.getCategories(username, currentAnalysisType).size();
+        int totalCategories = categoryImpl.getCategories(currentAnalysisType).size();
         for(int i = 0; i < totalCategories; i++) {
-            categories.add(categoryImpl.getCategories(username, currentAnalysisType).get(i).getName());
+            categories.add(categoryImpl.getCategories(currentAnalysisType).get(i).getName());
         }
 
         // Display categories based on the current categoryStartIndex
         for (int i = categoryStartIndex; i < categoryStartIndex + CATEGORIES_PER_PAGE && i < categories.size(); i++) {
             String category = categories.get(i);
-            HBox categoryRow = createCategoryRow(category, username);
+            HBox categoryRow = createCategoryRow(category);
             categoriesContainer.getChildren().add(categoryRow);
         }
 
@@ -289,10 +305,10 @@ public class Analysis {
         updateCategoryButtonVisibility();
     }
 
-    private HBox createCategoryRow(String category, String username) {
+    private HBox createCategoryRow(String category) {
         LocalDate firstDayOfMonth = LocalDate.now().withDayOfMonth(1);
-        double amountSpent = analysisImpl.getAmountSpentByCategory(username, category, firstDayOfMonth, LocalDate.now());
-        double totalSpent = analysisImpl.getTotalSpent(username, firstDayOfMonth, LocalDate.now());
+        double amountSpent = analysisImpl.getAmountSpentByCategory(category, firstDayOfMonth, LocalDate.now());
+        double totalSpent = analysisImpl.getTotalSpent(firstDayOfMonth, LocalDate.now());
         double percentage = (totalSpent != 0) ? (amountSpent / totalSpent) * 100 : 0;
 
         Label categoryLabel = new Label(category);
@@ -311,10 +327,12 @@ public class Analysis {
     }
 
     private void updateCategoryButtonVisibility() {
-
+        if(buttonsBox != null) {
+            buttonsBox.setVisible(true);
+        }
     }
 
-    private void clearContent(Pane root) {
-        root.getChildren().clear();
+    private void clearContent(VBox contentContainer) {
+        contentContainer.getChildren().clear();
     }
 }

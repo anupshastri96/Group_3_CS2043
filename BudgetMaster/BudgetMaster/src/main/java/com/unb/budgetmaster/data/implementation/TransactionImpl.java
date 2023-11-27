@@ -13,7 +13,6 @@ import java.time.LocalDate;
 import com.unb.budgetmaster.domain.abs.TransactionABS;
 import com.unb.budgetmaster.domain.model.Transaction;
 import com.unb.budgetmaster.domain.model.Category;
-import com.unb.budgetmaster.data.implementation.Database;
 
 
 public class TransactionImpl implements TransactionABS{
@@ -82,7 +81,7 @@ public class TransactionImpl implements TransactionABS{
             double transactionAmount = amount;
             String transactionType = type;
             String categoryType = category;
-            String insertTransaction = "insert into transaction_data(transaction_date, transaction_id, transaction_amount, transaction_type) values(" + transactionDate + "," + transactionID + "," + transactionAmount + "," + transactionType + "," + categoryType + " where user_name = " + username + ");";
+            String insertTransaction = "insert into transaction_data(transaction_date, transaction_id, transaction_amount, transaction_type) values(" + transactionDate + "," + transactionID + "," + transactionAmount + "," + transactionType + "," + categoryType + " where user_name = " + Database.user.getUsername() + ");";
             statement.executeUpdate(insertTransaction);
         }
         catch(SQLException e){
@@ -231,9 +230,6 @@ public class TransactionImpl implements TransactionABS{
         }
         return allTransactions;
     }
-    
-
-
     public String toString(Transaction transaction) {
         
         return "Transaction Date: " + transaction.getDate() + "\n" +

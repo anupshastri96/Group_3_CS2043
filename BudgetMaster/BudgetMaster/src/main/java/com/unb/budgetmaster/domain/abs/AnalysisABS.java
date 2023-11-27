@@ -9,4 +9,6 @@ public interface AnalysisABS {
     double getUsualSpent();
     double getUsualSpent(LocalDate date1, LocalDate date2);
     double getBalance();
+    double getBudget();
+    
 }

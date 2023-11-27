@@ -8,6 +8,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import com.unb.budgetmaster.domain.abs.AnalysisABS;
 
+import javafx.scene.chart.PieChart.Data;
+
 public class AnalysisImpl implements AnalysisABS{
     public static LocalDate date = LocalDate.now();
     Connection connection = Database.getDatabase();
@@ -105,5 +107,23 @@ public class AnalysisImpl implements AnalysisABS{
     public double getBalance() {
         double total = this.getTotalSpent() - this.getTotalSaved();
         return total;
+    }
+
+    @Override
+    public double getBudget(){
+        double budget = 0;
+        try{
+            String getBudget = "select user_budget from user_data where user_name = " + Database.user.getUsername() + ";";
+            PreparedStatement statement = connection.prepareStatement(getBudget);
+            ResultSet results = statement.executeQuery();
+
+            if(results.next()){
+                budget = results.getDouble("user_budget");
+            }
+        }
+        catch(SQLException e){
+            e.printStackTrace();
+        } 
+        return budget;
     }
 }

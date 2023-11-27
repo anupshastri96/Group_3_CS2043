@@ -1,8 +1,10 @@
-package com.unb.budgetmaster.budgetmaster.presentation;
+package com.unb.budgetmaster.presentation;
 
-import com.unb.budgetmaster.budgetmaster.domain.model.Transaction;
-import com.unb.budgetmaster.budgetmaster.domain.implementation.TransactionImpl;
-import com.unb.budgetmaster.budgetmaster.domain.implementation.AnalysisImpl;
+import com.unb.budgetmaster.data.implementation.AnalysisImpl;
+import com.unb.budgetmaster.data.implementation.Database;
+import com.unb.budgetmaster.data.implementation.TransactionImpl;
+import com.unb.budgetmaster.domain.model.Transaction;
+import com.unb.budgetmaster.domain.model.User;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
@@ -18,16 +20,17 @@ public class History {
     Button nextButton;
     Button previousButton;
 
-    public void getContent(Label contentLabel, VBox contentContainer, ArrayList<String> loginInformation) {
+    public void getContent(Label contentLabel, VBox contentContainer) {
         //Instantiate implementations
         transactionImpl = new TransactionImpl();
         analysisImpl = new AnalysisImpl();
 
+        User user = Database.user;
         // Get username from login information
-        String username = loginInformation.get(3);
+        String username = user.getUsername();
 
         // Modify contentLabel
-        contentLabel.setText("Current Balance: " + String.valueOf(analysisImpl.getBalance(username)));
+        contentLabel.setText("Current Balance: " + analysisImpl.getBalance());
 
         // Create HBox for Title and Edit button
         HBox titleBox = new HBox(20);
