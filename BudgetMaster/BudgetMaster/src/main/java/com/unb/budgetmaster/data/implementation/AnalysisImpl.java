@@ -2,21 +2,15 @@ package com.unb.budgetmaster.data.implementation;
 
 import java.sql.Connection;
 import java.sql.Date;
-import java.util.Calendar;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.time.LocalDate;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import com.unb.budgetmaster.data.implementation.Database;
 import com.unb.budgetmaster.domain.abs.AnalysisABS;
-import com.unb.budgetmaster.data.implementation.TransactionImpl;
 
 public class AnalysisImpl implements AnalysisABS{
     public static LocalDate date = LocalDate.now();
-    Database data = new Database();
-    TransactionImpl transaction = new TransactionImpl();
-    Connection connection = data.getDatabase();
+    Connection connection = Database.getDatabase();
 
     @Override
     public double getTotalSpent() {
