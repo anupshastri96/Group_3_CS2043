@@ -18,6 +18,7 @@ public class Menu {
     private Savings savings;
     private Analysis analysis;
     private History history;
+    private Account account;
 
     // UI Elements
     private Label titleLabel;
@@ -33,13 +34,14 @@ public class Menu {
         savings = new Savings();
         analysis = new Analysis();
         history = new History();
+        account = new Account();
 
         // Initialize Menu UI components
         initializeUI();
 
         // Create layout
         BorderPane mainPane = new BorderPane();
-        mainPane.setLeft(createMenuBar());
+        mainPane.setLeft(createMenuBar(root));
         mainPane.setCenter(createContentArea());
 
         // Set default selection to "History" button
@@ -63,19 +65,20 @@ public class Menu {
         contentContainer.getChildren().add(contentLabel);
     }
 
-    private VBox createMenuBar() {
+    private VBox createMenuBar(BorderPane root) {
         menuBar = new VBox(10);
         menuBar.setPadding(new Insets(10));
         menuBar.setStyle("-fx-background-color: #e0e0e0");
         menuBar.setAlignment(Pos.TOP_CENTER);
         menuBar.setMinWidth(200);
 
-        Button spendingsButton = createMenuButton("Spendings");
-        Button savingsButton = createMenuButton("Savings");
-        Button analysisButton = createMenuButton("Analysis");
-        historyButton = createMenuButton("History");
+        Button spendingsButton = createMenuButton("Spendings", root);
+        Button savingsButton = createMenuButton("Savings", root);
+        Button analysisButton = createMenuButton("Analysis", root);
+        Button accountButton = createMenuButton("Account", root);
+        historyButton = createMenuButton("History", root);
 
-        menuBar.getChildren().addAll(titleLabel, spendingsButton, savingsButton, analysisButton, historyButton);
+        menuBar.getChildren().addAll(titleLabel, spendingsButton, savingsButton, analysisButton, historyButton, accountButton);
         return menuBar;
     }
 
@@ -92,7 +95,7 @@ public class Menu {
         return contentArea;
     }
 
-    private Button createMenuButton(String text) {
+    private Button createMenuButton(String text, BorderPane root) {
         Button button = new Button(text);
 
         // Set button to be transparent by default
@@ -100,13 +103,13 @@ public class Menu {
 
         // Set button event
         button.setOnAction(event -> {
-            handleMenuButtonClick(text);
+            handleMenuButtonClick(text, root);
             setButtonSelected(button);
         });
         return button;
     }
 
-    private void handleMenuButtonClick(String menuOption) {
+    private void handleMenuButtonClick(String menuOption, BorderPane root) {
         // Clear existing content
         contentContainer.getChildren().clear();
 
@@ -124,17 +127,15 @@ public class Menu {
 
         // Handle content based on the clicked menu option
         if (menuOption.equals("Spendings")) {
-            System.out.println("Spending");
             spending.getContent(contentLabel, contentContainer);
-        } else if (menuOption.equals("Savings")) {
-            System.out.println("Saving");
+        } else if (menuOption.equals("Savings")) {;
             savings.getContent(contentLabel, contentContainer);
         } else if (menuOption.equals("Analysis")) {
-            System.out.println("Analysis");
             analysis.getContent(contentLabel, contentContainer);
         } else if (menuOption.equals("History")) {
-            System.out.println("History");
             history.getContent(contentLabel, contentContainer);
+        } else if (menuOption.equals("Account")) {
+            account.getContent(contentLabel, contentContainer, root);
         }
         return;
     }
