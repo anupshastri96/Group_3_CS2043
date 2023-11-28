@@ -153,6 +153,7 @@ public class Analysis {
                 new HBox(10, endDayField, endMonthField, endYearField),
                 analyzeButton
         );
+        popupLayout.setAlignment(Pos.CENTER);
 
         // Create scene for the popup
         Scene popupScene = new Scene(popupLayout, 300, 200);

@@ -3,6 +3,7 @@ package com.unb.budgetmaster.presentation;
 import com.unb.budgetmaster.data.implementation.AnalysisImpl;
 import com.unb.budgetmaster.data.implementation.Database;
 
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -87,6 +88,7 @@ public class Account {
 
         VBox editBox = new VBox(10);
         editBox.getChildren().addAll(newBudget_lb, budget_tf, buttonBox);
+        editBox.setAlignment(Pos.CENTER);
 
         // Create scene for the popup
         Scene popupScene = new Scene(editBox, 300, 200);
@@ -142,6 +144,7 @@ public class Account {
 
         VBox pWBox = new VBox(10);
         pWBox.getChildren().addAll(newPW_lb, pW_tf, buttonBox);
+        pWBox.setAlignment(Pos.CENTER);
 
         // Create scene for the popup
         Scene popupScene = new Scene(pWBox, 300, 200);
