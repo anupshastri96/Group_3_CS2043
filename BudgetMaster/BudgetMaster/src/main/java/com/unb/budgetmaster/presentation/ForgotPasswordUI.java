@@ -1,10 +1,7 @@
 package com.unb.budgetmaster.presentation;
 
-import java.util.ArrayList;
-
 import com.unb.budgetmaster.data.implementation.Database;
 import com.unb.budgetmaster.data.implementation.LoginImpl;
-import com.unb.budgetmaster.domain.model.User;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
@@ -63,7 +60,6 @@ public class ForgotPasswordUI {
 
         root.getChildren().clear();
         root.getChildren().add(topPane);
-        return;
     }
 
     private void switchToLogin(BorderPane root) {
@@ -85,3 +81,4 @@ public class ForgotPasswordUI {
         return;
     }
 }
+// End of Forgot Password UI class

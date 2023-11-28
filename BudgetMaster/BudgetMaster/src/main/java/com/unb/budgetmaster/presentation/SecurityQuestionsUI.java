@@ -2,7 +2,6 @@ package com.unb.budgetmaster.presentation;
 
 import com.unb.budgetmaster.data.implementation.Database;
 import com.unb.budgetmaster.data.implementation.LoginImpl;
-import com.unb.budgetmaster.domain.model.User;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
@@ -27,9 +26,9 @@ public class SecurityQuestionsUI {
 
     // Security Questions Array
     private final String[] securityQuestionsArray = {
-        "Question 1: What is your favorite childhood pet's name",
+        "Question 1: What is your favorite childhood pets name",
         "Question 2: In which city were you born?",
-        "Question 3: What is your mother's maiden name?",
+        "Question 3: What is your mothers maiden name?",
         "Question 4: What is the name of your favorite teacher in high school?",
         "Question 5: What is the model of your favourite car?"
     };
@@ -97,12 +96,16 @@ public class SecurityQuestionsUI {
             choice1.getChildren().addAll(firstQuestionText, choiceBox1);
             choice2.getChildren().addAll(secondQuestionText, choiceBox2);
 
-            // Add functionality to back and submit buttons
+            // Add functionality to back and submit buttons, 
             backButton.setOnAction(event -> backEvent(root, true));
             submitButton.setOnAction(event -> submitEvent(root, true, choiceBox1.getValue(), firstQuestionField.getText(), choiceBox2.getValue(), secondQuestionField.getText(), incorrectText));
 
             // Add elements to the VBox
-            topPane.getChildren().addAll(title, firstQuestionPrompt, choice1, firstQuestionField, secondQuestionPrompt, choice2, secondQuestionField);
+            topPane.getChildren().addAll(title, firstQuestionPrompt, choice1, firstQuestionField, secondQuestionPrompt, choice2, secondQuestionField, backButton, submitButton);
+        
+            // Add contents to root
+            root.getChildren().clear();
+            root.setCenter(topPane);
         }
     }
 
@@ -150,19 +153,25 @@ public class SecurityQuestionsUI {
                 return;
             }
 
+            Database.user.setQ1(question1);
+            Database.user.setQ2(question2);
+            Database.user.setQ1Answer(answer1);
+            Database.user.setQ1Answer(answer2);
+
             loginImpl.createUser(Database.user);
 
             menu.getContentMenu(root);
         }
 
         // Verify that answers match the ones established
-        if(!loginImpl.checkSecurityQuestions(username, answer1, answer2)) {
+        if(!loginImpl.checkSecurityQuestions(answer1, answer2)) {
             incorrectText.setText("One or more of your answers are incorrect, please try again!");
             return;
         }
 
         // Go to Forgot Password
         forgotPasswordUI.getContent(root, username);
-
+        return;
     }
 }
+// End of Security Questions UI class

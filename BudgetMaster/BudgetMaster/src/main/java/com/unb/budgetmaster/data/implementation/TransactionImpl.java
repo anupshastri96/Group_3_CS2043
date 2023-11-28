@@ -73,21 +73,18 @@ public class TransactionImpl implements TransactionABS{
     }
 
     @Override
-    public void addTransaction(String date, int id, double amount, String type, String category) {
+    public void addTransaction(LocalDate date, double amount, String type, String category, String payee) {
         try{
             Statement statement = connection.createStatement();
-            String transactionDate  = date;
-            int transactionID = id;
-            double transactionAmount = amount;
-            String transactionType = type;
-            String categoryType = category;
-            String insertTransaction = "insert into transaction_data(transaction_date, transaction_id, transaction_amount, transaction_type) values(" + transactionDate + "," + transactionID + "," + transactionAmount + ", '" + transactionType + "', '" + categoryType + "' where user_name = '" + Database.user.getUsername() + "');";
+            Date transactionDate = Date.valueOf(date);
+            int transactionID = this.getLastTransactionID() + 1;
+            String insertTransaction = "insert into transaction_data(transaction_id, transaction_name, user_name, transaction_amount, transaction_date, category_name, transaction_payee) values(" + transactionID + ",'" + type + "', '" + Database.user.getUsername() + "', " + amount + "," + transactionDate + ", '" + category  + "', '" + payee + "');";
             statement.executeUpdate(insertTransaction);
         }
         catch(SQLException e){
             e.printStackTrace();
         }
-        
+        return;
     }
 
     @Override
@@ -230,6 +227,21 @@ public class TransactionImpl implements TransactionABS{
         }
         return allTransactions;
     }
+    @Override
+    public int getLastTransactionID() {
+        int transactionId = 0;
+        String query = "select MAX(transaction_id) from transaction_data";
+        try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if(resultSet.next()){
+                transactionId = resultSet.getInt("transaction_id");
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return transactionId;
+    }
+
     public String toString(Transaction transaction) {
         
         return "Transaction Date: " + transaction.getDate() + "\n" +

@@ -11,16 +11,13 @@ public class User {
     private String secQ2;
     private String secQ2Answer;
 
-    public User(String firstname, String middlename, String lastname, String password, String username, String secQ1, String secQ1Answer, String secQ2, String secQ2Answer) {
+    public User(String firstname, String middlename, String lastname, String password, String username) {
         this.firstname = firstname;
         this.middlename = middlename;
         this.lastname = lastname;
         this.password = password;
         this.username = username;
-        this.secQ1 = secQ1;
-        this.secQ1Answer = secQ1Answer;
-        this.secQ2 = secQ2;
-        this.secQ2Answer = secQ2Answer;
+        
     }
 
     public String getFirstName() {
@@ -47,6 +44,22 @@ public class User {
         this.password = password;
 
         return;
+    }
+     public void setQ1(String string) {
+        secQ1 = string;
+    }
+
+     public void setQ2(String string) {
+        secQ2 = string;
+    }
+
+    public void setQ1Answer(String string){
+        secQ1Answer = string;
+        
+    }
+    
+     public void setQ2Answer(String string){
+        secQ2Answer = string;
     }
 
     public String getSecQ1() {

@@ -76,7 +76,6 @@ public class Menu {
         historyButton = createMenuButton("History");
 
         menuBar.getChildren().addAll(titleLabel, spendingsButton, savingsButton, analysisButton, historyButton);
-
         return menuBar;
     }
 
@@ -104,7 +103,6 @@ public class Menu {
             handleMenuButtonClick(text);
             setButtonSelected(button);
         });
-
         return button;
     }
 
@@ -134,6 +132,7 @@ public class Menu {
         } else if (menuOption.equals("History")) {
             history.getContent(contentLabel, contentContainer);
         }
+        return;
     }
 
     private void setButtonSelected(Button selectedButton) {
@@ -147,6 +146,7 @@ public class Menu {
 
         // Update the currently selected button
         this.selectedButton = selectedButton;
+        return;
     }
 }
 // End of Menu class

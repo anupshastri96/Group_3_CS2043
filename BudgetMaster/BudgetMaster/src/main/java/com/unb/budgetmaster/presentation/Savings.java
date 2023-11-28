@@ -102,6 +102,7 @@ public class Savings {
 
         // Update button visibility based on the startIndex and total transactions
         updateButtonVisibility(nextButton, prevButton);
+        return;
     }
 
     private void updateButtonVisibility(Button nextButton, Button previousButton) {
@@ -113,6 +114,7 @@ public class Savings {
 
         // Show/hide Previous button based on the current startIndex
         previousButton.setDisable(startIndex <= 0);
+        return;
     }
 }
 // End of Savings class

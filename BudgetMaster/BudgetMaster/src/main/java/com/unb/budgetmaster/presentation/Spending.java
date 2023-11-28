@@ -113,6 +113,7 @@ public class Spending {
 
         // Update button visibility based on the startIndex and total transactions
         updateButtonVisibility(transactionImpl, nextButton, prevButton);
+        return;
     }
 
     private void updateButtonVisibility(TransactionImpl transactionImpl, Button nextButton, Button previousButton) {
@@ -124,6 +125,7 @@ public class Spending {
 
         // Show/hide Previous button based on the current startIndex
         previousButton.setDisable(startIndex <= 0);
+        return;
     }
 
     private void editSpending() {
@@ -192,6 +194,7 @@ public class Spending {
 
         // Show the popup
         popupStage.showAndWait();
+        return;
     }
 }
 // End of Spending class

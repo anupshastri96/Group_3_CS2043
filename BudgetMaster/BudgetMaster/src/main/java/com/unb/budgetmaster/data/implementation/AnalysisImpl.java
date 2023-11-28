@@ -139,4 +139,21 @@ public class AnalysisImpl implements AnalysisABS{
             e.printStackTrace();
         }
     }
+
+    @Override
+    public double getUsualSaved() {
+        int lengthOfMonth = date.lengthOfMonth();
+        double totalAmountSaved = this.getTotalSaved();
+        double total = totalAmountSaved/lengthOfMonth;
+        return total;
+    }
+   
+    @Override
+    public double getUsualSaved(LocalDate date1, LocalDate date2) {
+        int lengthOfMonth = date.lengthOfMonth();
+        double totalAmountSaved = this.getTotalSaved(date1, date2);
+        double total = totalAmountSaved/lengthOfMonth;
+        return total;
+    }
+
 }

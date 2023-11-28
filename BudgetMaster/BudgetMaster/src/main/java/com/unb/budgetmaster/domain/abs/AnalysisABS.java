@@ -8,6 +8,8 @@ public interface AnalysisABS {
     double getTotalSaved(LocalDate date1, LocalDate date2);
     double getUsualSpent();
     double getUsualSpent(LocalDate date1, LocalDate date2);
+    double getUsualSaved();
+    double getUsualSaved(LocalDate date1, LocalDate date2);
     double getBalance();
     double getBudgetTotal();
     void setBudgetTotal(double budget);

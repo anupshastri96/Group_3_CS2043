@@ -121,13 +121,13 @@ public class LoginImpl implements LoginABS {
         try{
             Statement statement = connection.createStatement();
             //Inserts username and password into user_data table
-            String insertUserSQL = "insert into user_data values('" + userName + "', '" + passWord + "');";
+            String insertUserSQL = "insert into user_data values('" + userName + "', '" + passWord + "', " + null + ");";
             //Inserts name, middle name, and last name into account_data table
-            String insertAccountSQL = "insert into account_data values('" + name + "', '" + middleName + "', '" + lastName + "') where user_name = '" + userName + "';";
+            String insertAccountSQL = "insert into account_data values('" + userName + "', '" + name + "', '" + middleName + "', '" + lastName +  "');";
             //Inserts security question 1, question 2, answer 1, and answer 2 into security_data table
-            String insertSecuritySQL = "insert into security_data values('" + q1 + "', '" + a1 + "', '" + q2 + "', '" + a2 + "') where user_name = '" + userName + "';";
+            String insertSecuritySQL = "insert into security_data values('" + userName + "', '" + q1 + "', '" + a1 + "', '" + q2 + "', '" + a2 + "');";
             statement.executeUpdate(insertUserSQL);
-            statement.executeUpdate(insertAccountSQL);
+            statement.executeUpdate(insertAccountSQL); 
             statement.executeUpdate(insertSecuritySQL);
         }
         catch(SQLException e){
@@ -165,7 +165,7 @@ public class LoginImpl implements LoginABS {
         catch(SQLException e){
             e.printStackTrace();
         }
-        user = new User(name, middleName, lastName, passWord, Database.user.getUsername(), q1, a1, q2, a2);
+        user = new User(name, middleName, lastName, passWord, Database.user.getUsername());
         return user;
     }
     @Override

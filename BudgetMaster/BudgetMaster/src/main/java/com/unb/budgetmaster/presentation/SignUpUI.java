@@ -3,7 +3,6 @@ package com.unb.budgetmaster.presentation;
 import com.unb.budgetmaster.data.implementation.Database;
 import com.unb.budgetmaster.data.implementation.LoginImpl;
 import com.unb.budgetmaster.domain.model.User;
-import com.unb.budgetmaster.presentation.SecurityQuestionsUI;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Button;
@@ -130,9 +129,10 @@ public class SignUpUI {
             return;
         }
 
-        Database.user = new User(firstname,middlename,lastname,username,password);
+        Database.user = new User(firstname, middlename, lastname, username, password);
         // Switch to Security Questions Page
         securityQuestionsUI.getContent(root, true);
+        return;
     }
 }
 // End of SignUpUI class

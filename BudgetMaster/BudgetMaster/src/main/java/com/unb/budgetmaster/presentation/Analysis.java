@@ -2,7 +2,6 @@ package com.unb.budgetmaster.presentation;
 
 import com.unb.budgetmaster.data.implementation.AnalysisImpl;
 import com.unb.budgetmaster.data.implementation.CategoryImpl;
-import com.unb.budgetmaster.data.implementation.Database;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -10,11 +9,9 @@ import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javafx.scene.layout.Pane;
 
 import java.time.DateTimeException;
 import java.time.LocalDate;
@@ -51,9 +48,6 @@ public class Analysis {
     public void getContent(Label contentLabel, VBox contentContainer) {
         analysisImpl = new AnalysisImpl();
         categoryImpl = new CategoryImpl();
-
-        // Get username from login information
-        String username = Database.user.getUsername();
 
         // Modify contentLabel
         contentLabel.setText("Analyze your expenses");
@@ -166,6 +160,7 @@ public class Analysis {
 
         // Show the popup
         popupStage.showAndWait();
+        return;
     }
 
     private void analyzeThroughDates(String startDay, String startMonth, String startYear,
@@ -282,6 +277,7 @@ public class Analysis {
 
         // Add components to contentContainer
         contentContainer.getChildren().addAll(categoriesContainer, buttonsBox);
+        return;
     }
 
     private void updateCategories(VBox categoriesContainer) {
@@ -303,13 +299,19 @@ public class Analysis {
 
         // Update button visibility based on the categoryStartIndex and total categories
         updateCategoryButtonVisibility();
+        return;
     }
 
     private HBox createCategoryRow(String category) {
         LocalDate firstDayOfMonth = LocalDate.now().withDayOfMonth(1);
-        double amountSpent = analysisImpl.getAmountSpentByCategory(category, firstDayOfMonth, LocalDate.now());
-        double totalSpent = analysisImpl.getTotalSpent(firstDayOfMonth, LocalDate.now());
-        double percentage = (totalSpent != 0) ? (amountSpent / totalSpent) * 100 : 0;
+
+        double amountSpent;
+        double totalSpent;
+        double percentage;
+
+        amountSpent = analysisImpl.getTotalSpent(firstDayOfMonth, LocalDate.now());
+        totalSpent = analysisImpl.getTotalSpent(firstDayOfMonth, LocalDate.now());
+        percentage = (totalSpent != 0) ? (amountSpent / totalSpent) * 100 : 0;
 
         Label categoryLabel = new Label(category);
         Label percentageLabel = new Label(String.format("%.2f%%", percentage));
@@ -330,9 +332,12 @@ public class Analysis {
         if(buttonsBox != null) {
             buttonsBox.setVisible(true);
         }
+        return;
     }
 
     private void clearContent(VBox contentContainer) {
         contentContainer.getChildren().clear();
+        return;
     }
 }
+// End of Analysis class
