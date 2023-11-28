@@ -3,6 +3,7 @@ package com.unb.budgetmaster.presentation;
 import com.unb.budgetmaster.data.implementation.AnalysisImpl;
 import com.unb.budgetmaster.data.implementation.Database;
 
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -87,6 +88,10 @@ public class Account {
         VBox editBox = new VBox(10);
         editBox.getChildren().addAll(newBudget_lb, budget_tf, buttonBox);
 
+        // Create scene for the popup
+        Scene popupScene = new Scene(editBox, 300, 200);
+        editStage.setScene(popupScene);
+
     }
     
     private void back(Stage stage) {
@@ -133,8 +138,12 @@ public class Account {
         HBox buttonBox = new HBox(10);
         buttonBox.getChildren().addAll(backButton, submitButton);
 
-        VBox editBox = new VBox(10);
-        editBox.getChildren().addAll(newPW_lb, pW_tf, buttonBox);
+        VBox pWBox = new VBox(10);
+        pWBox.getChildren().addAll(newPW_lb, pW_tf, buttonBox);
+
+        // Create scene for the popup
+        Scene popupScene = new Scene(pWBox, 300, 200);
+        pWStage.setScene(popupScene);
     }
 
     private void passwordSubmit(String newPW, TextField pW_tf, Stage stage) {
