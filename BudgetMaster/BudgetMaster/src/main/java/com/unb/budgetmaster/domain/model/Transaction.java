@@ -1,6 +1,7 @@
 package com.unb.budgetmaster.domain.model;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 public class Transaction {
     LocalDate date;
@@ -41,5 +42,14 @@ public class Transaction {
 
     public String getCategory() {
         return category;
+    }
+
+    @Override
+    public String toString() {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+
+        String retString = "Date: " + date.format(formatter) + ", ID: " + id + ", Amount: " + amount + ", Payee:" + payee + ", Type: " + type + ", Category: " + category;
+
+        return retString;
     }
 }
