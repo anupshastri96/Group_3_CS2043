@@ -1,12 +1,11 @@
-package com.unb.budgetmaster.budgetmaster.presentation;
+package com.unb.budgetmaster.presentation;
 
-import java.util.ArrayList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 
 public class Menu {
@@ -15,17 +14,24 @@ public class Menu {
     private Button selectedButton; // Track the currently selected button
 
     // Menu Sections
-    //private Analysis analysis; //ADD THIS IN
+    private Spending spending;
+    private Savings savings;
+    private Analysis analysis;
     private History history;
 
     // UI Elements
     private Label titleLabel;
     private Label contentLabel;
     private VBox contentContainer;
+    private VBox contentArea;
+    private VBox contentLabelBox;
+    private VBox menuBar;
 
-    public void getContentMenu(Pane root, ArrayList<String> loginInformation) {
+    public void getContentMenu(BorderPane root) {
         // Initialize our Menu classes
-        //analysis = new Analysis(); // ADD THIS IN
+        spending = new Spending();
+        savings = new Savings();
+        analysis = new Analysis();
         history = new History();
 
         // Initialize Menu UI components
@@ -33,14 +39,14 @@ public class Menu {
 
         // Create layout
         BorderPane mainPane = new BorderPane();
-        mainPane.setLeft(createMenuBar(loginInformation));
+        mainPane.setLeft(createMenuBar());
         mainPane.setCenter(createContentArea());
 
         // Set default selection to "History" button
         setButtonSelected(historyButton);
 
         root.getChildren().clear();
-        root.getChildren().add(mainPane);
+        root.setCenter(mainPane);
     }
 
     private void initializeUI() {
@@ -48,34 +54,34 @@ public class Menu {
         titleLabel.setStyle("-fx-font-weight: bold");
         titleLabel.setStyle("-fx-font-size: 30");
 
-        Label contentLabel = new Label("Current Balance: "); // Default content label
+        contentLabel = new Label("Current Balance: "); // Default content label
         contentLabel.setStyle("-fx-font-weight: bold");
         contentLabel.setStyle("-fx-font-size: 24");
 
-        VBox contentContainer = new VBox(10);
+        contentContainer = new VBox(10);
         contentContainer.setPadding(new Insets(10));
+        contentContainer.getChildren().add(contentLabel);
     }
 
-    private VBox createMenuBar(ArrayList<String> loginInformation) {
-        VBox menuBar = new VBox(10);
+    private VBox createMenuBar() {
+        menuBar = new VBox(10);
         menuBar.setPadding(new Insets(10));
         menuBar.setStyle("-fx-background-color: #e0e0e0");
         menuBar.setAlignment(Pos.TOP_CENTER);
         menuBar.setMinWidth(200);
 
-        Button spendingsButton = createMenuButton("Spendings", loginInformation);
-        Button savingsButton = createMenuButton("Savings", loginInformation);
-        Button analysisButton = createMenuButton("Analysis", loginInformation);
-        historyButton = createMenuButton("History", loginInformation); // Store the historyButton as an instance variable since it's default
+        Button spendingsButton = createMenuButton("Spendings");
+        Button savingsButton = createMenuButton("Savings");
+        Button analysisButton = createMenuButton("Analysis");
+        historyButton = createMenuButton("History");
 
         menuBar.getChildren().addAll(titleLabel, spendingsButton, savingsButton, analysisButton, historyButton);
-
         return menuBar;
     }
 
     private VBox createContentArea() {
-        VBox contentArea = new VBox(10);
-        VBox contentLabelBox = new VBox(30);
+        contentArea = new VBox(10);
+        contentLabelBox = new VBox(30);
         contentLabelBox.setPadding(new Insets(30));
         contentLabelBox.setStyle("-fx-border-color: black");
         contentLabelBox.setStyle("-fx-border-style: hidden hidden solid hidden");
@@ -86,7 +92,7 @@ public class Menu {
         return contentArea;
     }
 
-    private Button createMenuButton(String text, ArrayList<String> loginInformation) {
+    private Button createMenuButton(String text) {
         Button button = new Button(text);
 
         // Set button to be transparent by default
@@ -94,24 +100,39 @@ public class Menu {
 
         // Set button event
         button.setOnAction(event -> {
-            handleMenuButtonClick(text, loginInformation);
+            handleMenuButtonClick(text);
             setButtonSelected(button);
         });
-
         return button;
     }
 
-    private void handleMenuButtonClick(String menuOption, ArrayList<String> loginInformation) {
+    private void handleMenuButtonClick(String menuOption) {
         // Clear existing content
         contentContainer.getChildren().clear();
 
-        if(menuOption.equals("Analysis")) {
-
+        // Handle the menu button click
+        for (Node node : menuBar.getChildren()) {
+            if (node instanceof Button) {
+                Button button = (Button) node;
+                if (button.getText().equals(menuOption)) {
+                    // Found the clicked button
+                    setButtonSelected(button);
+                    break;
+                }
+            }
         }
 
-        if(menuOption.equals("History")) {
-            history.getContent(contentLabel, contentContainer, loginInformation);
+        // Handle content based on the clicked menu option
+        if (menuOption.equals("Spendings")) {
+            spending.getContent(contentLabel, contentContainer);
+        } else if (menuOption.equals("Savings")) {
+            savings.getContent(contentLabel, contentContainer);
+        } else if (menuOption.equals("Analysis")) {
+            analysis.getContent(contentLabel, contentContainer);
+        } else if (menuOption.equals("History")) {
+            history.getContent(contentLabel, contentContainer);
         }
+        return;
     }
 
     private void setButtonSelected(Button selectedButton) {
@@ -125,6 +146,7 @@ public class Menu {
 
         // Update the currently selected button
         this.selectedButton = selectedButton;
+        return;
     }
 }
 // End of Menu class

@@ -10,16 +10,29 @@ public class User {
     private String secQ1Answer;
     private String secQ2;
     private String secQ2Answer;
+    private double budget;
 
-    public User(String firstname, String middlename, String lastname, String password, String username, String secQ1, String secQ1Answer, String secQ2, String secQ2Answer) {
+    public User(String firstname, String middlename, String lastname, String username, String password) {
         this.firstname = firstname;
         this.middlename = middlename;
         this.lastname = lastname;
-        this.password = password;
         this.username = username;
+        this.password = password;
+    }
+
+    public void setSecQ1(String secQ1) {
         this.secQ1 = secQ1;
+    }
+
+    public void setSecQ1Answer(String secQ1Answer) {
         this.secQ1Answer = secQ1Answer;
+    }
+
+    public void setSecQ2(String secQ2) {
         this.secQ2 = secQ2;
+    }
+
+    public void setSecQ2Answer(String secQ2Answer) {
         this.secQ2Answer = secQ2Answer;
     }
 
@@ -45,8 +58,6 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
-
-        return;
     }
 
     public String getSecQ1() {
@@ -63,5 +74,13 @@ public class User {
 
     public String getSecQ2Answer() {
         return secQ2Answer;
+    }
+
+    public void setBudget(double budget) {
+        this.budget = budget;
+    }
+
+    public double getBudget() {
+        return budget;
     }
 }

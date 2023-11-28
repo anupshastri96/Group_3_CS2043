@@ -1,8 +1,11 @@
-package com.unb.budgetmaster.budgetmaster.presentation;
+package com.unb.budgetmaster.presentation;
 
 import java.util.ArrayList;
 
-import com.unb.budgetmaster.budgetmaster.domain.implementation.LoginImpl;
+import com.unb.budgetmaster.data.implementation.Database;
+import com.unb.budgetmaster.data.implementation.LoginImpl;
+import com.unb.budgetmaster.domain.model.User;
+
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.Scene;
@@ -18,8 +21,8 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture; 
 import javafx.scene.layout.VBox;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Pane;
-
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.BorderPane;
 
 public class LoginUI {
 
@@ -31,10 +34,10 @@ public class LoginUI {
     private SignUpUI signUpUI;
     private SecurityQuestionsUI securityQuestionsUI;
 
-    // Store username
-    private String username;
+    // Login Information
+    ArrayList<String> loginInformation = new ArrayList<String>();
 
-    public void getLoginUI(Pane root){
+    public void getLoginUI(BorderPane root){
         // Instantiate implementations
         loginImpl = new LoginImpl();
 
@@ -70,31 +73,49 @@ public class LoginUI {
 
         // Create button for Forgot Password
         Button forgotPasswordButton = new Button("Forgot Password");
-        forgotPasswordButton.setOnAction(event -> switchToFP(root));
+        forgotPasswordButton.setOnAction(event -> switchToSecurityQuestions(root));
+
+        HBox buttonBox = new HBox(10);
+        buttonBox.getChildren().addAll(createAccountButton, forgotPasswordButton);
+        buttonBox.setAlignment(Pos.CENTER);
 
         // Create button to submit login information
         Button submit = new Button("Submit");
         submit.setOnAction(event -> verifyLogin(userName_tf.getText(), passWord_tf.getText(), root, loginSuccess));
         
+        // DELETE THIS
+        Button temporary = new Button("Temporary");
+        temporary.setOnAction(event -> {
+            Database.user = new User("Alex", "middlename", "Boudreau", "Username_Here", "Password_Here");
+            menu.getContentMenu(root);
+        });
+
         // Create VBox to contain everything in
-        VBox topPane = new VBox(10.0);
-        topPane.setAlignment(Pos.CENTER);
-        topPane.getChildren().addAll(title, displayLogin, loginSuccess, userName_lb, userName_tf, passWord_lb, passWord_tf, submit);
-        
+        VBox topPane = new VBox(20.0);
+        topPane.setStyle("-fx-alignment: CENTER");
+        topPane.getChildren().addAll(title, displayLogin, loginSuccess, userName_lb, userName_tf, passWord_lb, passWord_tf, submit, buttonBox, temporary);
+
         // Set the root Pane to the Login UI
         root.getChildren().clear();
-        root.getChildren().add(topPane);
-        return;
+        root.setCenter(topPane);
     }
 
-    private void verifyLogin(String username, String password, Pane root, Text loginSuccess) {
+    private void verifyLogin(String username, String password, BorderPane root, Text loginSuccess) {
         // Check to make sure our username and password are part of our database
         if(loginImpl.checkLoginInfo(username, password)) {
             // Get login information from username
-            ArrayList<String> loginInformation = loginImpl.getLoginDetails(username);
+            loginInformation.add(Database.user.getFirstName());
+            loginInformation.add(Database.user.getMiddleName());
+            loginInformation.add(Database.user.getLastName());
+            loginInformation.add(Database.user.getUsername());
+            loginInformation.add(Database.user.getPassword());
+            loginInformation.add(Database.user.getSecQ1());
+            loginInformation.add(Database.user.getSecQ1Answer());
+            loginInformation.add(Database.user.getSecQ2());
+            loginInformation.add(Database.user.getSecQ2Answer());
 
             // Switch to Menu screen
-            menu.getContentMenu(root, loginInformation);
+            menu.getContentMenu(root);
             return;
         }
 
@@ -103,18 +124,16 @@ public class LoginUI {
         return;
     }
 
-    private void switchToFP(Pane root) {
+    private void switchToSecurityQuestions(BorderPane root) {
         // Open prompt that asks for username
         openUsernameInput();
 
-        ArrayList<String> loginInformation = loginImpl.getLoginDetails(username);
-
         // Switch the content displayed in root to Security Questions
-        securityQuestionsUI.getContent(root, loginInformation, false);
+        securityQuestionsUI.getContent(root, false);
         return;
     }
 
-    private void switchToSignUp(Pane root) {
+    private void switchToSignUp(BorderPane root) {
         // Switch the content displayed in root to Sign Up
         signUpUI.getContent(root);
         return;
@@ -146,6 +165,7 @@ public class LoginUI {
         popupStage.setScene(dialogScene);
         popupStage.setTitle("Enter your username");
         popupStage.show();
+        return;
     }
 
     private void submitUsername(String inputUsername, TextField usernameTextField, Stage stage) {
@@ -161,8 +181,10 @@ public class LoginUI {
             return;
         }
 
-        username = inputUsername;
+        Database.user = new User("test", "test", "test", inputUsername, "test");
+        Database.user = loginImpl.getUser();
         stage.close();
+        return;
     }
 }
 // End of LoginUI class

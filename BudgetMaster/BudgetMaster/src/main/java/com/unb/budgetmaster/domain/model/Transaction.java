@@ -1,4 +1,4 @@
-package com.unb.budgetmaster.budgetmaster.domain.model;
+package com.unb.budgetmaster.domain.model;
 
 import java.time.LocalDate;
 

@@ -1,8 +1,8 @@
-package com.unb.budgetmaster.budgetmaster.presentation;
+package com.unb.budgetmaster.presentation;
 
-import com.unb.budgetmaster.budgetmaster.domain.model.Transaction;
-import com.unb.budgetmaster.budgetmaster.domain.implementation.TransactionImpl;
-import com.unb.budgetmaster.budgetmaster.domain.implementation.AnalysisImpl;
+import com.unb.budgetmaster.data.implementation.AnalysisImpl;
+import com.unb.budgetmaster.data.implementation.TransactionImpl;
+import com.unb.budgetmaster.domain.model.Transaction;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
@@ -18,16 +18,13 @@ public class History {
     Button nextButton;
     Button previousButton;
 
-    public void getContent(Label contentLabel, VBox contentContainer, ArrayList<String> loginInformation) {
+    public void getContent(Label contentLabel, VBox contentContainer) {
         //Instantiate implementations
         transactionImpl = new TransactionImpl();
         analysisImpl = new AnalysisImpl();
 
-        // Get username from login information
-        String username = loginInformation.get(3);
-
         // Modify contentLabel
-        contentLabel.setText("Current Balance: " + String.valueOf(analysisImpl.getBalance(username)));
+        contentLabel.setText("Current Balance: " + analysisImpl.getBalance());
 
         // Create HBox for Title and Edit button
         HBox titleBox = new HBox(20);
@@ -59,7 +56,7 @@ public class History {
         });
 
         nextButton.setOnAction(event -> {
-            int totalTransactions = transactionImpl.getTransactions(null, null, null).size();
+            int totalTransactions = transactionImpl.getTransactions().size();
             startIndex = Math.min(startIndex + TRANSACTIONS_DISPLAYED, totalTransactions - 1);
             updateTransactions(transactionsContainer, transactionImpl, nextButton, previousButton);
         });
@@ -79,7 +76,7 @@ public class History {
         transactionsContainer.getChildren().clear();
 
         // Get transactions from the implementation
-        ArrayList<Transaction> transactionsList = transactionImpl.getTransactions(null, null, null);
+        ArrayList<Transaction> transactionsList = transactionImpl.getTransactions();
 
         // Display transactions based on the current startIndex
         for (int i = startIndex; i < startIndex + TRANSACTIONS_DISPLAYED && i < transactionsList.size(); i++) {
@@ -89,10 +86,11 @@ public class History {
 
         // Update button visibility based on the startIndex and total transactions
         updateButtonVisibility(transactionImpl, nextButton, prevButton);
+        return;
     }
 
     private static void updateButtonVisibility(TransactionImpl transactionImpl, Button nextButton, Button previousButton) {
-        ArrayList<Transaction> transactionsList = transactionImpl.getTransactions(null, null, null);
+        ArrayList<Transaction> transactionsList = transactionImpl.getTransactions();
         int totalTransactions = transactionsList.size();
 
         // Show/hide Next button based on remaining transactions
@@ -100,6 +98,7 @@ public class History {
 
         // Show/hide Previous button based on the current startIndex
         previousButton.setDisable(startIndex <= 0);
+        return;
     }
 }
 // End of History class

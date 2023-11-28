@@ -1,11 +1,17 @@
 package com.unb.budgetmaster.domain.abs;
+import java.time.LocalDate;
 
 public interface AnalysisABS {
     double getTotalSpent();
     double getTotalSaved();
-    double getTotalSpent(String date1, String date2);
-    double getTotalSaved(String date1, String date2);
+    double getTotalSpent(LocalDate date1, LocalDate date2);
+    double getTotalSaved(LocalDate date1, LocalDate date2);
     double getUsualSpent();
-    double getUsualSpent(String date1, String date2);
+    double getUsualSpent(LocalDate date1, LocalDate date2);
+    double getUsualSaved();
+    double getUsualSaved(LocalDate date1, LocalDate date2);
     double getBalance();
+    double getBudgetTotal();
+    void setBudgetTotal(double budget);
 }
+// End of AnalysisABS Interface
