@@ -92,6 +92,8 @@ public class Account {
         Scene popupScene = new Scene(editBox, 300, 200);
         editStage.setScene(popupScene);
 
+        // Show the popup
+        editStage.show();
     }
     
     private void back(Stage stage) {
@@ -144,6 +146,9 @@ public class Account {
         // Create scene for the popup
         Scene popupScene = new Scene(pWBox, 300, 200);
         pWStage.setScene(popupScene);
+
+        // Show the popup
+        pWStage.show();
     }
 
     private void passwordSubmit(String newPW, TextField pW_tf, Stage stage) {
