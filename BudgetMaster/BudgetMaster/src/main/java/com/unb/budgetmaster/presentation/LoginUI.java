@@ -120,6 +120,7 @@ public class LoginUI {
     private void switchToSecurityQuestions(BorderPane root) {
         // Open prompt that asks for username
         openUsernameInput();
+        System.out.println("AHhhHhhHhhHHHHHHHHHHHHH");
 
         // Switch the content displayed in root to Security Questions
         securityQuestionsUI.getContent(root, false);

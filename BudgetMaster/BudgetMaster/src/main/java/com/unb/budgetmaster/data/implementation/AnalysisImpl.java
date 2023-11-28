@@ -19,7 +19,7 @@ public class AnalysisImpl implements AnalysisABS{
     public double getTotalSpent() {
         double total = 0;
         try{
-            String totalSpentQuery = "select transaction_amount from transaction_data where transaction_type = 'Spendings' and user_name = '" + Database.user.getUsername()  + "';";
+            String totalSpentQuery = "select transaction_amount from transaction_data where transaction_name = 'Spendings' and user_name = '" + Database.user.getUsername()  + "';";
             PreparedStatement statement = connection.prepareStatement(totalSpentQuery);
             ResultSet results = statement.executeQuery();
             if(results.next()){
@@ -36,7 +36,7 @@ public class AnalysisImpl implements AnalysisABS{
     public double getTotalSaved() {
         double total = 0;
         try{
-            String totalSavedQuery = "select transaction_amount from transaction_data where transaction_type = 'Savings' and user_name = '" + Database.user.getUsername() + "';";
+            String totalSavedQuery = "select transaction_amount from transaction_data where transaction_name = 'Savings' and user_name = '" + Database.user.getUsername() + "';";
             PreparedStatement statement = connection.prepareStatement(totalSavedQuery);
             ResultSet results = statement.executeQuery();
             if(results.next()){
@@ -55,7 +55,7 @@ public class AnalysisImpl implements AnalysisABS{
         Date d1 = Date.valueOf(date1);
         Date d2 = Date.valueOf(date2);
         try{
-            String queryTotalSpent = "select transaction_amount from transaction_data where transaction_date >= '" + d1 + "' and transaction_date <= '" + d2 + "' and transaction_type = 'Spendings' and user_name = '" + Database.user.getUsername() + "';";
+            String queryTotalSpent = "select transaction_amount from transaction_data where transaction_date >= '" + d1 + "' and transaction_date <= '" + d2 + "' and transaction_name = 'Spendings' and user_name = '" + Database.user.getUsername() + "';";
             PreparedStatement statement = connection.prepareStatement(queryTotalSpent);
             ResultSet results = statement.executeQuery();
             if(results.next()){
@@ -65,6 +65,7 @@ public class AnalysisImpl implements AnalysisABS{
         catch(SQLException e){
             e.printStackTrace();
         }
+        System.out.println("THIS IS THE TOTAL U SPENT ASSHOLE!!!!!!!!:" + total);
         return total;
     }
 
@@ -74,7 +75,7 @@ public class AnalysisImpl implements AnalysisABS{
         Date d1 = Date.valueOf(date1);
         Date d2 = Date.valueOf(date2);
         try{
-            String queryTotalSaved = "select transaction_amount from transaction_data where transaction_date >= '" + d1 + "' and transaction_date <= '" + d2 + "' and transaction_type = 'Savings' and user_name = '" + Database.user.getUsername() + "';";
+            String queryTotalSaved = "select transaction_amount from transaction_data where transaction_date >= '" + d1 + "' and transaction_date <= '" + d2 + "' and transaction_name = 'Savings' and user_name = '" + Database.user.getUsername() + "';";
             PreparedStatement statement = connection.prepareStatement(queryTotalSaved);
             ResultSet results = statement.executeQuery();
             if(results.next()){
@@ -106,7 +107,7 @@ public class AnalysisImpl implements AnalysisABS{
 
     @Override
     public double getBalance() {
-        double total = this.getTotalSpent() - this.getTotalSaved();
+        double total = this.getTotalSaved() - this.getTotalSpent();
         return total;
     }
 
@@ -125,6 +126,7 @@ public class AnalysisImpl implements AnalysisABS{
         catch(SQLException e){
             e.printStackTrace();
         } 
+        System.out.println("THIS IS THE FUCKING BUDGET!!!!!" + budget);
         return budget;
     }
 
