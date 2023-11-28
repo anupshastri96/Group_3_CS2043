@@ -72,21 +72,26 @@ public class SignUpUI {
         TextField confirmPass_tf = new TextField();
         confirmPass_tf.setMaxWidth(200);
 
+        // Create label and text field for Budget
+        Label budget_lb = new Label("Budget*");
+        TextField budget_tf = new TextField();
+        budget_tf.setMaxWidth(200);
+
         // Create button to submit information
         Button submit = new Button("Submit");
-        submit.setOnAction(event -> confirmSignUp(firstName_tf.getText(), middleName_tf.getText(), lastName_tf.getText(), userName_tf.getText(), passWord_tf.getText(), confirmPass_tf.getText(), root));
+        submit.setOnAction(event -> confirmSignUp(firstName_tf.getText(), middleName_tf.getText(), lastName_tf.getText(), userName_tf.getText(), passWord_tf.getText(), confirmPass_tf.getText(), budget_tf.getText(), root));
         
         // Create VBox to contain all fields
         VBox topPane = new VBox(10.0);
         topPane.setAlignment(Pos.CENTER);
-        topPane.getChildren().addAll(title, displaySignUp, enterDetail_lb, firstName_lb, firstName_tf, middleName_lb, middleName_tf, lastName_lb, lastName_tf, userName_lb, userName_tf, passWord_lb, passWord_tf, confirmPass_lb, confirmPass_tf, submit);
+        topPane.getChildren().addAll(title, displaySignUp, enterDetail_lb, firstName_lb, firstName_tf, middleName_lb, middleName_tf, lastName_lb, lastName_tf, userName_lb, userName_tf, passWord_lb, passWord_tf, confirmPass_lb, confirmPass_tf, budget_lb, budget_tf, submit);
 
         // Set the root Pane to the Sign Up UI
         root.getChildren().clear();
         root.setCenter(topPane);
     }
 
-    private void confirmSignUp(String firstname, String middlename, String lastname, String username, String password, String confirmPassword, BorderPane root) {
+    private void confirmSignUp(String firstname, String middlename, String lastname, String username, String password, String confirmPassword, String budget, BorderPane root) {
         // Check if First Name field isn't blank
         if(firstname.equals("")) {
             enterDetail_lb.setText("Please enter a First Name");
@@ -117,6 +122,12 @@ public class SignUpUI {
             return;
         }
 
+        // Check if Budget field isn't blank
+        if(budget.equals("")) {
+            enterDetail_lb.setText("Please confirm your password");
+            return;
+        }
+
         // Verify that the username doesn't exist in our database
         if(loginImpl.doesUsernameExists(username)) {
             enterDetail_lb.setText("Username already taken/Invalid username");
@@ -130,6 +141,7 @@ public class SignUpUI {
         }
 
         Database.user = new User(firstname, middlename, lastname, username, password);
+        Database.user.setBudgetTotal(budget);
         // Switch to Security Questions Page
         securityQuestionsUI.getContent(root, true);
         return;
