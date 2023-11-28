@@ -22,7 +22,7 @@ public class ForgotPasswordUI {
 
     private Label notConfirmed;
 
-    public void getContent(BorderPane root, String username) {
+    public void getContent(BorderPane root) {
         // Instantiate implementation
         loginImpl = new LoginImpl();
 

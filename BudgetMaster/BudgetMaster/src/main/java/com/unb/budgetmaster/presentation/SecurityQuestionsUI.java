@@ -101,12 +101,24 @@ public class SecurityQuestionsUI {
             submitButton.setOnAction(event -> submitEvent(root, true, choiceBox1.getValue(), firstQuestionField.getText(), choiceBox2.getValue(), secondQuestionField.getText(), incorrectText));
 
             // Add elements to the VBox
-            topPane.getChildren().addAll(title, firstQuestionPrompt, choice1, firstQuestionField, secondQuestionPrompt, choice2, secondQuestionField);
-        
-            // Add contents to root
-            root.getChildren().clear();
-            root.setCenter(topPane);
+            topPane.getChildren().addAll(title, firstQuestionPrompt, choice1, firstQuestionField, secondQuestionPrompt, choice2, secondQuestionField, backButton, submitButton);
         }
+
+        else {
+            // Set text to be the user's Security Questions
+            firstQuestionText.setText(Database.user.getSecQ1());
+            secondQuestionText.setText(Database.user.getSecQ2());
+
+            backButton.setOnAction(event -> backEvent(root, false));
+            submitButton.setOnAction(event -> submitEvent(root, false, firstQuestionText.getText(), firstQuestionField.getText(), secondQuestionText.getText(), secondQuestionField.getText(), incorrectText));
+
+            // Add elements to the VBox
+            topPane.getChildren().addAll(title, firstQuestionText, firstQuestionField, secondQuestionText, secondQuestionField, backButton, submitButton);
+        }
+
+        // Add contents to root
+        root.getChildren().clear();
+        root.setCenter(topPane);
     }
 
     private void getSecurityQuestion(Text text, ChoiceBox<String> choiceBox) {
@@ -131,9 +143,6 @@ public class SecurityQuestionsUI {
     }
 
     private void submitEvent(BorderPane root, Boolean isNewUser, String question1, String answer1, String question2, String answer2, Text incorrectText) {
-        // Get our username from the login information given
-        String username = Database.user.getUsername();
-        
         // Check if an answer was given for the first security question
         if(answer1.equals("")) {
             incorrectText.setText("Please input an answer for the first security question");
@@ -156,6 +165,7 @@ public class SecurityQuestionsUI {
             loginImpl.createUser(Database.user);
 
             menu.getContentMenu(root);
+            return;
         }
 
         // Verify that answers match the ones established
@@ -165,7 +175,7 @@ public class SecurityQuestionsUI {
         }
 
         // Go to Forgot Password
-        forgotPasswordUI.getContent(root, username);
+        forgotPasswordUI.getContent(root);
         return;
     }
 }

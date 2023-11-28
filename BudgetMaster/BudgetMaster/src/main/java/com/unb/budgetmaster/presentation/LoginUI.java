@@ -103,16 +103,9 @@ public class LoginUI {
     private void verifyLogin(String username, String password, BorderPane root, Text loginSuccess) {
         // Check to make sure our username and password are part of our database
         if(loginImpl.checkLoginInfo(username, password)) {
-            // Get login information from username
-            loginInformation.add(Database.user.getFirstName());
-            loginInformation.add(Database.user.getMiddleName());
-            loginInformation.add(Database.user.getLastName());
-            loginInformation.add(Database.user.getUsername());
-            loginInformation.add(Database.user.getPassword());
-            loginInformation.add(Database.user.getSecQ1());
-            loginInformation.add(Database.user.getSecQ1Answer());
-            loginInformation.add(Database.user.getSecQ2());
-            loginInformation.add(Database.user.getSecQ2Answer());
+            // Set user information
+            Database.user = new User("blank", "blank", "blank", username, password);
+            Database.user = loginImpl.getUser();
 
             // Switch to Menu screen
             menu.getContentMenu(root);
@@ -127,6 +120,7 @@ public class LoginUI {
     private void switchToSecurityQuestions(BorderPane root) {
         // Open prompt that asks for username
         openUsernameInput();
+        
 
         // Switch the content displayed in root to Security Questions
         securityQuestionsUI.getContent(root, false);

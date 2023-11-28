@@ -10,11 +10,14 @@ import javafx.scene.layout.VBox;
 import java.util.ArrayList;
 
 public class History {
-
     private static final int TRANSACTIONS_DISPLAYED = 5;
     private static int startIndex = 0; // Starting index for displayed transactions
+
+    // Interface Implementation
     private AnalysisImpl analysisImpl;
     private TransactionImpl transactionImpl;
+
+    // Buttons
     Button nextButton;
     Button previousButton;
 
@@ -29,7 +32,7 @@ public class History {
         // Create HBox for Title and Edit button
         HBox titleBox = new HBox(20);
 
-        // Label for title
+        // Create Label for title
         Label titleLabel = new Label("History");
 
         // Create Edit button
@@ -69,7 +72,12 @@ public class History {
         buttonsBox.setStyle("-fx-alignment: CENTER;");
 
         // Add components to contentContainer
-        contentContainer.getChildren().addAll(titleBox, historyLabel, transactionsContainer, buttonsBox);
+        contentContainer.getChildren().addAll(
+            titleBox,
+            historyLabel,
+            transactionsContainer,
+            buttonsBox
+        );
     }
 
     private static void updateTransactions(VBox transactionsContainer, TransactionImpl transactionImpl, Button nextButton, Button prevButton) {

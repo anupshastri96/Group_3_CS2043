@@ -57,7 +57,7 @@ public class Analysis {
         LocalDate firstDayOfMonth = LocalDate.now().withDayOfMonth(1);
         LocalDate currentDay = LocalDate.now();
         String remainingBudgetText = "You have spent: $" + analysisImpl.getTotalSpent(firstDayOfMonth, currentDay) + " since " + firstDayOfMonth;
-        String remainingAmountText = "You still have $" + (analysisImpl.getBudgetTotal() - analysisImpl.getTotalSpent( firstDayOfMonth, currentDay))  + " to spend!";
+        String remainingAmountText = "You still have: $" + (analysisImpl.getBudgetTotal() - analysisImpl.getTotalSpent(firstDayOfMonth, currentDay))  + " to spend!";
 
         // Display saved amount since the start of the month
         String savedAmountText = "You managed to save: $" + analysisImpl.getTotalSaved(firstDayOfMonth, currentDay) + " since " + firstDayOfMonth;
@@ -94,12 +94,12 @@ public class Analysis {
 
         // Add components to contentContainer
         contentContainer.getChildren().addAll(
-                remainingBudgetLabel,
-                remainingAmountLabel,
-                savedAmountLabel,
-                typicalSpendingLabel,
-                typicalSavingsLabel,
-                buttonBox
+            remainingBudgetLabel,
+            remainingAmountLabel,
+            savedAmountLabel,
+            typicalSpendingLabel,
+            typicalSavingsLabel,
+            buttonBox
         );
         contentContainer.setSpacing(40);
     }

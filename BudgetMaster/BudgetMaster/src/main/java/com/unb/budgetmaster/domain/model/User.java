@@ -48,6 +48,14 @@ public class User {
         return lastname;
     }
 
+    public String getFullName() {
+        if(getMiddleName().equals(null)) {
+            return firstname + " " + lastname;
+        }
+
+        return firstname + " " + middlename + " " + lastname;
+    }
+
     public String getUsername() {
         return username;
     }
@@ -76,11 +84,11 @@ public class User {
         return secQ2Answer;
     }
 
-    public void setBudget(double budget) {
+    public void setBudgetTotal(double budget) {
         this.budget = budget;
     }
 
-    public double getBudget() {
+    public double getBudgetTotal() {
         return budget;
     }
 }

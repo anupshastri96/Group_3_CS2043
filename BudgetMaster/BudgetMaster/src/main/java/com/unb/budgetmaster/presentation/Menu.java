@@ -124,12 +124,16 @@ public class Menu {
 
         // Handle content based on the clicked menu option
         if (menuOption.equals("Spendings")) {
+            System.out.println("Spending");
             spending.getContent(contentLabel, contentContainer);
         } else if (menuOption.equals("Savings")) {
+            System.out.println("Saving");
             savings.getContent(contentLabel, contentContainer);
         } else if (menuOption.equals("Analysis")) {
+            System.out.println("Analysis");
             analysis.getContent(contentLabel, contentContainer);
         } else if (menuOption.equals("History")) {
+            System.out.println("History");
             history.getContent(contentLabel, contentContainer);
         }
         return;
